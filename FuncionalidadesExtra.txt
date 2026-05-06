@@ -1,0 +1,11 @@
+Funcionalidades extra:
+1. Utilizador admin por defeito — criado automaticamente na 1ª execução, sem precisar de 
+setup manual.
+2. Hash de passwords (SHA-256) — as passwords nunca são guardadas em texto simples na base de 
+dados.
+3. Proteções contra eliminação — não é possível eliminar um Tipo de Artigo com artigos 
+associados, nem um Artigo usado em listas, nem um Utilizador com listas criadas.
+4. Orçamento acumulado mensal — o painel do Modo Compra mostra o gasto total de todas as 
+listas do mês, não apenas a lista atual.
+5. Sugestão de orçamento com margem de segurança — a sugestão é calculada com média dos meses 
+anteriores + 10% de buffer.
