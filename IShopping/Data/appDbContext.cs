@@ -28,7 +28,7 @@ namespace iShopping.Data
         private const string Port     = "3306";
         private const string Database = "iShoppingDB";
         private const string User     = "root";
-        private const string Password = ""; // coloque aqui a sua password do MySQL
+        private const string Password = "gay"; // coloque aqui a sua password do MySQL
 
 <<<<<<< HEAD
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
