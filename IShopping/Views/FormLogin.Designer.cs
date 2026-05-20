@@ -1,4 +1,4 @@
-﻿namespace IShopping.Forms
+namespace iShopping.Views
 {
     partial class FormLogin
     {
@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "FormLogin";
+            this.ClientSize = new System.Drawing.Size(384, 291);
+            this.Text = "iShopping - Login";
         }
 
         #endregion
