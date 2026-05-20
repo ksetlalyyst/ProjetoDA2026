@@ -16,11 +16,5 @@ namespace iShopping.Data
         public DbSet<PlannedItem> PlannedItems { get; set; }
         public DbSet<UnplannedItem> UnplannedItems { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=iShoppingDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
-        }
     }
 }
