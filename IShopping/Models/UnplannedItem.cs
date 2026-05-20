@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IShopping.Models
 {
-    internal class UnplannedItem
+    public class UnplannedItem
     {
     }
 }
