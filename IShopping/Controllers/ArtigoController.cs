@@ -11,32 +11,40 @@ namespace iShopping.Controllers
     {
         public List<Artigo> GetTodos()
         {
-            using var db = new AppDbContext();
-            return db.Artigos.Include(a => a.TipoArtigo).OrderBy(a => a.Nome).ToList();
+            using (AppDbContext db = new AppDbContext())
+            {
+                return db.Artigos.Include(a => a.TipoArtigo).OrderBy(a => a.Nome).ToList();
+            }
         }
 
         public List<Artigo> GetPorTipo(int tipoId)
         {
-            using var db = new AppDbContext();
-            return db.Artigos.Include(a => a.TipoArtigo)
-                .Where(a => a.TipoArtigoId == tipoId)
-                .OrderBy(a => a.Nome).ToList();
+            using (AppDbContext db = new AppDbContext())
+            {
+                return db.Artigos.Include(a => a.TipoArtigo)
+                    .Where(a => a.TipoArtigoId == tipoId)
+                    .OrderBy(a => a.Nome).ToList();
+            }
         }
 
         public Artigo GetPorId(int id)
         {
-            using var db = new AppDbContext();
-            return db.Artigos.Include(a => a.TipoArtigo).FirstOrDefault(a => a.Id == id);
+            using (AppDbContext db = new AppDbContext())
+            {
+                return db.Artigos.Include(a => a.TipoArtigo).FirstOrDefault(a => a.Id == id);
+            }
         }
 
         public (bool sucesso, string erro) Criar(string nome, int tipoArtigoId)
         {
             try
             {
-                using var db = new AppDbContext();
-                db.Artigos.Add(new Artigo { Nome = nome, TipoArtigoId = tipoArtigoId });
-                db.SaveChanges();
-                return (true, null);
+                using (AppDbContext db = new AppDbContext())
+                {
+                    db.Artigos.Add(new Artigo { Nome = nome, TipoArtigoId = tipoArtigoId });
+                    db.SaveChanges();
+                    return (true, null);
+                }
             }
             catch (Exception ex) { return (false, ex.Message); }
         }
@@ -45,13 +53,15 @@ namespace iShopping.Controllers
         {
             try
             {
-                using var db = new AppDbContext();
-                var a = db.Artigos.Find(id);
-                if (a == null) return (false, "Artigo n√£o encontrado.");
-                a.Nome = nome;
-                a.TipoArtigoId = tipoArtigoId;
-                db.SaveChanges();
-                return (true, null);
+                using (AppDbContext db = new AppDbContext())
+                {
+                    Artigo a = db.Artigos.Find(id);
+                    if (a == null) return (false, "Artigo n„o encontrado.");
+                    a.Nome = nome;
+                    a.TipoArtigoId = tipoArtigoId;
+                    db.SaveChanges();
+                    return (true, null);
+                }
             }
             catch (Exception ex) { return (false, ex.Message); }
         }
@@ -60,14 +70,16 @@ namespace iShopping.Controllers
         {
             try
             {
-                using var db = new AppDbContext();
-                var a = db.Artigos.Find(id);
-                if (a == null) return (false, "Artigo n√£o encontrado.");
-                db.Artigos.Remove(a);
-                db.SaveChanges();
-                return (true, null);
+                using (AppDbContext db = new AppDbContext())
+                {
+                    Artigo a = db.Artigos.Find(id);
+                    if (a == null) return (false, "Artigo n„o encontrado.");
+                    db.Artigos.Remove(a);
+                    db.SaveChanges();
+                    return (true, null);
+                }
             }
-            catch (Exception ex) { return (false, "N√£o √© poss√≠vel eliminar: " + (ex.InnerException?.Message ?? ex.Message)); }
+            catch (Exception ex) { return (false, "N„o È possÌvel eliminar: " + ex.InnerException?.Message ?? ex.Message); }
         }
     }
 }
