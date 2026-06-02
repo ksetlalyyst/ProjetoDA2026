@@ -1,6 +1,6 @@
 ﻿namespace iShoppingKelly.Views
 {
-    partial class FormRegister
+    partial class FormRegistar
     {
         /// <summary>
         /// Required designer variable.
@@ -120,6 +120,7 @@
             this.btnRegistar.TabIndex = 10;
             this.btnRegistar.Text = "Registar";
             this.btnRegistar.UseVisualStyleBackColor = false;
+            this.btnRegistar.Click += new System.EventHandler(this.btnRegistar_Click);
             // 
             // btnCancelar
             // 
@@ -137,8 +138,9 @@
             this.btnCancelar.TabIndex = 11;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
-            // FormRegister
+            // FormRegistar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -153,8 +155,9 @@
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.lblNome);
-            this.Name = "FormRegister";
+            this.Name = "FormRegistar";
             this.Text = "FormRegister";
+            this.Load += new System.EventHandler(this.FormRegistar_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

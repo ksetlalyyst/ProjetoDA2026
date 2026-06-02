@@ -10,62 +10,45 @@ namespace iShoppingKelly.Controllers
 {
     public class UtilizadorController
     {
-        private readonly AppDbContext Context;
-        public UtilizadorController(AppDbContext context)
-        {
-                        Context = context;
-        }
-
         public Utilizador Login(string username, string password)
         {
-            return Context.Utilizadores
-                .FirstOrDefault(u => u.Username == username && u.Password == password);
-        }
-
-        public bool UsernameExists(string username)
-        {
-            return Context.Utilizadores.Any(u => u.Username == username);
-        }
-
-        public void Criar(string username, string password)
-        {
-            var utilizador = new Utilizador
+            using (AppDbContext context = new AppDbContext())
             {
-                Username = username,
-                Password = password
-            };
-            Context.Utilizadores.Add(utilizador);
-            Context.SaveChanges();
-        }
+                Utilizador utilizador = context.Utilizadores.FirstOrDefault(u => u.Username == username);
 
-        public List<Utilizador> ListarTodos()
-        {
-            return Context.Utilizadores.OrderBy(u => u.Username).ToList();
-        }
+                if (utilizador == null)
+                {
+                    throw new InvalidOperationException("Utilizador não existe.");
+                }
 
-        public Utilizador ObterPorId(int id)
-        {
-            return Context.Utilizadores.Find(id);
-        }
-
-        public void Atualizar(int id, string username, string password)
-        {
-            var utilizador = Context.Utilizadores.Find(id);
-            if (utilizador != null)
-            {
-                utilizador.Username = username;
-                utilizador.Password = password;
-                Context.SaveChanges();
+                if (utilizador.PasswordHash != password)
+                {
+                    throw new InvalidOperationException("Password incorreta.");
+                }
+                return utilizador;
             }
         }
 
-        public void Eliminar(int id)
+        public void Registar(string nome, string username, string password)
         {
-            var utilizador = Context.Utilizadores.Find(id);
-            if (utilizador != null)
+            using (AppDbContext context = new AppDbContext())
             {
-                Context.Utilizadores.Remove(utilizador);
-                Context.SaveChanges();
+                Utilizador utilizadorExistente = context.Utilizadores
+                    .FirstOrDefault(u => u.Username == username);
+
+                if (utilizadorExistente != null)
+                {
+                    throw new InvalidOperationException("Username já existe.");
+                }
+                Utilizador utilizador = new Utilizador();
+                {
+                    utilizador.Nome = nome;
+                    utilizador.Username = username;
+                    utilizador.PasswordHash = password;
+
+                    context.Utilizadores.Add(utilizador);
+                    context.SaveChanges();
+                }
             }
         }
     }

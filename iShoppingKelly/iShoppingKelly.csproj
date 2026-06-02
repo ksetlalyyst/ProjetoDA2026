@@ -64,12 +64,6 @@
     <Compile Include="Controllers\TipoArtigoController.cs" />
     <Compile Include="Controllers\UtilizadorController.cs" />
     <Compile Include="Data\AppDbContext.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\Artigo.cs" />
     <Compile Include="Models\Compra.cs" />
     <Compile Include="Models\ItemCompra.cs" />
@@ -126,11 +120,11 @@
     <Compile Include="Views\FormPrincipal.Designer.cs">
       <DependentUpon>FormPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\FormRegister.cs">
+    <Compile Include="Views\FormRegistar.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\FormRegister.Designer.cs">
-      <DependentUpon>FormRegister.cs</DependentUpon>
+    <Compile Include="Views\FormRegistar.Designer.cs">
+      <DependentUpon>FormRegistar.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\FormTiposArtigo.cs">
       <SubType>Form</SubType>
@@ -171,8 +165,8 @@
     <EmbeddedResource Include="Views\FormPrincipal.resx">
       <DependentUpon>FormPrincipal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\FormRegister.resx">
-      <DependentUpon>FormRegister.cs</DependentUpon>
+    <EmbeddedResource Include="Views\FormRegistar.resx">
+      <DependentUpon>FormRegistar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormTiposArtigo.resx">
       <DependentUpon>FormTiposArtigo.cs</DependentUpon>

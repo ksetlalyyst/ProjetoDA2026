@@ -33,6 +33,8 @@
             this.btnEditarOrc = new System.Windows.Forms.Button();
             this.btnNovoOrc = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.txtNomeTipoArt = new System.Windows.Forms.TextBox();
+            this.lblNomeTipoArt = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,11 +98,29 @@
             this.button1.Text = "Exportar CSV";
             this.button1.UseVisualStyleBackColor = false;
             // 
+            // txtNomeTipoArt
+            // 
+            this.txtNomeTipoArt.Location = new System.Drawing.Point(61, 12);
+            this.txtNomeTipoArt.Name = "txtNomeTipoArt";
+            this.txtNomeTipoArt.Size = new System.Drawing.Size(504, 20);
+            this.txtNomeTipoArt.TabIndex = 26;
+            // 
+            // lblNomeTipoArt
+            // 
+            this.lblNomeTipoArt.AutoSize = true;
+            this.lblNomeTipoArt.Location = new System.Drawing.Point(16, 12);
+            this.lblNomeTipoArt.Name = "lblNomeTipoArt";
+            this.lblNomeTipoArt.Size = new System.Drawing.Size(35, 13);
+            this.lblNomeTipoArt.TabIndex = 25;
+            this.lblNomeTipoArt.Text = "Filtrar:";
+            // 
             // FormPlaneamentoCompras
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 266);
+            this.Controls.Add(this.txtNomeTipoArt);
+            this.Controls.Add(this.lblNomeTipoArt);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnEliminarOrc);
@@ -110,6 +130,7 @@
             this.Text = "FormPlaneamentoCompras";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -120,5 +141,7 @@
         private System.Windows.Forms.Button btnEditarOrc;
         private System.Windows.Forms.Button btnNovoOrc;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtNomeTipoArt;
+        private System.Windows.Forms.Label lblNomeTipoArt;
     }
 }
