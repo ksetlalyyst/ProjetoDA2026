@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace iShopping.Models
 {
     public class Compra
     {
         public int Id { get; set; }
+
+        [MaxLength(100)]
         public string Nome { get; set; }
         public DateTime DataCriacao { get; set; } = DateTime.Now;
         public DateTime? DataFechada { get; set; }

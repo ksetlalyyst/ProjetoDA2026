@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace iShopping.Models
 {
@@ -16,6 +17,8 @@ namespace iShopping.Models
         public decimal? QuantidadeAdquirida { get; set; }
         public decimal? PrecoUnitario { get; set; }
         public bool Adquirido { get; set; } = false;
+
+        [MaxLength(500)]
         public string Observacoes { get; set; }
 
         public int CriadoPorId { get; set; }
