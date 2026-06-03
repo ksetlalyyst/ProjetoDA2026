@@ -21,5 +21,9 @@ namespace iShoppingKelly.Models
 
         public DateTime DataCriacao { get; set; } = DateTime.Now;
         public DateTime? DataAlteracao { get; set; }
+       /* public override string ToString()
+        {
+            return Nome + " - " + ValorMaximo + "€";
+        }*/
     }
 }

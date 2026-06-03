@@ -19,5 +19,9 @@ namespace iShoppingKelly.Models
         public ICollection<ItemCompra> ItensAlterados { get; set; }
         public ICollection<Orcamento> OrcamentosCriados { get; set; }
         public ICollection<Orcamento> OrcamentosAlterados { get; set; }
+        public override string ToString()
+        {
+            return Nome + " (" + Username + ")";
+        }
     }
 }

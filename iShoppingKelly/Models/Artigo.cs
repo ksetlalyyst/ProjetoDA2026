@@ -14,5 +14,9 @@ namespace iShoppingKelly.Models
 
         public TipoArtigo TipoArtigo { get; set; }
         public ICollection<ItemCompra> ItensCompra { get; set; }
+        public override string ToString()
+        {
+            return Nome;
+        }
     }
 }

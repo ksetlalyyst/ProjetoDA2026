@@ -29,5 +29,9 @@ namespace iShoppingKelly.Models
         public Utilizador FechadaPor { get; set; }
 
         public ICollection<ItemCompra> Itens { get; set; }
+        public override string ToString()
+        {
+            return Nome;
+        }
     }
 }
