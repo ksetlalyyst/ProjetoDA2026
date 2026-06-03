@@ -13,5 +13,9 @@ namespace iShoppingKelly.Models
         public string Descricao { get; set; }
 
         public ICollection<Artigo> Artigos { get; set; }
+        public override string ToString()
+        {
+            return Nome;
+        }
     }
 }

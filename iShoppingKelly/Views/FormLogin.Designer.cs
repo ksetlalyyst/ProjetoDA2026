@@ -73,7 +73,6 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(235, 20);
             this.txtUser.TabIndex = 3;
-            this.txtUser.TextChanged += new System.EventHandler(this.txtUser_TextChanged);
             // 
             // txtPassword
             // 
@@ -128,6 +127,7 @@
             this.Controls.Add(this.labeliShopping);
             this.Name = "FormLogin";
             this.Text = "FormLogin";
+            this.Load += new System.EventHandler(this.FormLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -28,20 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.btnEliminarTipo = new System.Windows.Forms.Button();
             this.btnEditarTipo = new System.Windows.Forms.Button();
             this.btnNovoTipo = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.lblNomeTipoArt = new System.Windows.Forms.Label();
+            this.txtNomeTipoArt = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dataGridView3
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 44);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(555, 175);
-            this.dataGridView1.TabIndex = 15;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Location = new System.Drawing.Point(12, 44);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.Size = new System.Drawing.Size(555, 175);
+            this.dataGridView3.TabIndex = 15;
+            this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             // 
             // btnEliminarTipo
             // 
@@ -55,6 +58,7 @@
             this.btnEliminarTipo.TabIndex = 14;
             this.btnEliminarTipo.Text = "Eliminar";
             this.btnEliminarTipo.UseVisualStyleBackColor = false;
+            this.btnEliminarTipo.Click += new System.EventHandler(this.btnEliminarTipo_Click);
             // 
             // btnEditarTipo
             // 
@@ -68,6 +72,7 @@
             this.btnEditarTipo.TabIndex = 13;
             this.btnEditarTipo.Text = "Editar";
             this.btnEditarTipo.UseVisualStyleBackColor = false;
+            this.btnEditarTipo.Click += new System.EventHandler(this.btnEditarTipo_Click);
             // 
             // btnNovoTipo
             // 
@@ -81,28 +86,51 @@
             this.btnNovoTipo.TabIndex = 12;
             this.btnNovoTipo.Text = "Novo";
             this.btnNovoTipo.UseVisualStyleBackColor = false;
+            this.btnNovoTipo.Click += new System.EventHandler(this.btnNovoTipo_Click);
+            // 
+            // lblNomeTipoArt
+            // 
+            this.lblNomeTipoArt.AutoSize = true;
+            this.lblNomeTipoArt.Location = new System.Drawing.Point(13, 13);
+            this.lblNomeTipoArt.Name = "lblNomeTipoArt";
+            this.lblNomeTipoArt.Size = new System.Drawing.Size(38, 13);
+            this.lblNomeTipoArt.TabIndex = 16;
+            this.lblNomeTipoArt.Text = "Nome:";
+            // 
+            // txtNomeTipoArt
+            // 
+            this.txtNomeTipoArt.Location = new System.Drawing.Point(58, 13);
+            this.txtNomeTipoArt.Name = "txtNomeTipoArt";
+            this.txtNomeTipoArt.Size = new System.Drawing.Size(504, 20);
+            this.txtNomeTipoArt.TabIndex = 17;
             // 
             // FormTiposArtigo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(574, 286);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.txtNomeTipoArt);
+            this.Controls.Add(this.lblNomeTipoArt);
+            this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.btnEliminarTipo);
             this.Controls.Add(this.btnEditarTipo);
             this.Controls.Add(this.btnNovoTipo);
             this.Name = "FormTiposArtigo";
             this.Text = "FormTiposArtigo";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.Load += new System.EventHandler(this.FormTiposArtigo_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.Button btnEliminarTipo;
         private System.Windows.Forms.Button btnEditarTipo;
         private System.Windows.Forms.Button btnNovoTipo;
+        private System.Windows.Forms.Label lblNomeTipoArt;
+        private System.Windows.Forms.TextBox txtNomeTipoArt;
     }
 }

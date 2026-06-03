@@ -16,75 +16,72 @@ namespace iShoppingKelly.Views
 {
     public partial class FormLogin : System.Windows.Forms.Form
     {
-        private readonly UtilizadorController UtilizadorController;
-        List<UtilizadorController> utilizadores = new List<UtilizadorController>();
-        public int UtilizadorId { get; private set; }
+       
         public FormLogin()
         {
             InitializeComponent();
-            var context = new AppDbContext();
-            UtilizadorController = new UtilizadorController(context);
+            
+        }
+        private void FormLogin_Load(object sender, EventArgs e)
+        {
+            txtPassword.PasswordChar = '*';
         }
         private void btnEntrar_Click(object sender, EventArgs e)
         {
-            var username = txtUser.Text.Trim();
-            var password = txtPassword.Text;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(txtUser.Text))
             {
-                MessageBox.Show("Preencha o username e a password.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Preencha o username.");
                 return;
             }
 
-            var utilizador = UtilizadorController.Login(username, password);
-            if (utilizador != null)
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                UtilizadorId = utilizador.Id;
-                DialogResult = DialogResult.OK;
-                Close();
+                MessageBox.Show("Preencha a password.");
+                return;
             }
-            else
+
+            UtilizadorController controller = new UtilizadorController();
+
+            try
             {
-                MessageBox.Show("Username ou password inválidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Utilizador utilizador = controller.Login(txtUser.Text, txtPassword.Text);
+
+                MessageBox.Show("Login efetuado com sucesso!");
+
+
+                FormPrincipal formPrincipal = new FormPrincipal(utilizador);
+
+                this.Hide();
+                formPrincipal.ShowDialog();
+                this.Show();
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Erro ao efetuar login.");
             }
         }
-        
+
+
         private void btnRegistar_Click(object sender, EventArgs e)
         {
-            var username = txtUser.Text.Trim();
-            var password = txtPassword.Text;
+            FormRegistar formRegistar = new FormRegistar();
 
+            this.Hide();
+            formRegistar.ShowDialog();
+            this.Show();
 
-            if (string.IsNullOrEmpty(username))
-            {
-                MessageBox.Show("Introduza um nome de utilizador.");
-                return;
-            }
-
-            string connectionString = "Server=SERVIDOR;Database=BASE_DADOS;Trusted_Connection=True;";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "INSERT INTO utilizadores (username) VALUES (@username)";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@username", username);
-
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-            }
         }
 
-        private void txtUser_TextChanged(object sender, EventArgs e)
-        {
-            var username = txtUser.Text.Trim();
-
-            if (!string.IsNullOrEmpty(username))
-            {
-                utilizadores.Add(username);
-            }
-        }
+       
     }
 }
+
+       
+       
+        
+    
+

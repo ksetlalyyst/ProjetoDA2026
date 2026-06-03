@@ -3,63 +3,104 @@ using iShoppingKelly.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace iShoppingKelly.Controllers
 {
-    internal class ArtigoController
+    public class ArtigoController
     {
-            private readonly AppDbContext _context;
-
-            public ArtigoController(AppDbContext context)
+        public List<Artigo> ListarTodos()
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                _context = context;
+                return context.Artigos.Include("TipoArtigo").ToList();
             }
+        }
 
-            public List<Artigo> ListarTodos()
+        public List<Artigo> ListarPorTipo(int tipoArtigoId)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                return _context.Artigos.Include(a => a.TipoArtigo).OrderBy(a => a.Nome).ToList();
-            }
-
-            public List<Artigo> ListarPorTipo(int tipoId)
-            {
-                return _context.Artigos.Include(a => a.TipoArtigo)
-                    .Where(a => a.TipoArtigoId == tipoId)
-                    .OrderBy(a => a.Nome)
+                return context.Artigos.Include("TipoArtigo")
+                    .Where(a => a.TipoArtigoId == tipoArtigoId)
                     .ToList();
             }
+        }
 
-            public Artigo ObterPorId(int id)
+        public List<Artigo> ListarPorNome(string nome)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                return _context.Artigos.Include(a => a.TipoArtigo).FirstOrDefault(a => a.Id == id);
+                return context.Artigos.Include("TipoArtigo")
+                    .Where(a => a.Nome.Contains(nome))
+                    .ToList();
             }
+        }
 
-            public void Criar(string nome, int tipoId)
+        public List<Artigo> ListarPorTipoENome(int tipoArtigoId, string nome)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                _context.Artigos.Add(new Artigo { Nome = nome, TipoArtigoId = tipoId });
-                _context.SaveChanges();
+                return context.Artigos.Include("TipoArtigo")
+                    .Where(a => a.TipoArtigoId == tipoArtigoId && a.Nome.Contains(nome))
+                    .ToList();
             }
+        }
 
-            public void Atualizar(int id, string nome, int tipoId)
+        public Artigo ObterPorId(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                var artigo = _context.Artigos.Find(id);
-                if (artigo != null)
-                {
-                    artigo.Nome = nome;
-                    artigo.TipoArtigoId = tipoId;
-                    _context.SaveChanges();
-                }
+                return context.Artigos.Include("TipoArtigo")
+                    .FirstOrDefault(a => a.Id == id);
             }
+        }
+        // formartigo
+        public void AdicionarArtigo(string nome, int tipoArtigoId)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new InvalidOperationException("O nome do artigo é obrigatório.");
 
-            public void Eliminar(int id)
+            using (AppDbContext context = new AppDbContext())
             {
-                var artigo = _context.Artigos.Find(id);
-                if (artigo != null)
-                {
-                    _context.Artigos.Remove(artigo);
-                    _context.SaveChanges();
-                }
+                Artigo artigo = new Artigo();
+
+                artigo.Nome = nome;
+                artigo.TipoArtigoId = tipoArtigoId;
+                
+
+                context.Artigos.Add(artigo);
+                context.SaveChanges();
+            }
+        }
+
+        public void EditarArtigo(int id, string novoNome, int tipoArtigoId)
+        {
+            
+            using (AppDbContext context = new AppDbContext())
+            {
+                Artigo artigo = context.Artigos.FirstOrDefault(a => a.Id == id);
+
+                if (artigo == null)
+                    throw new InvalidOperationException("Artigo não encontrado.");
+
+                artigo.Nome = novoNome;
+                artigo.TipoArtigoId = tipoArtigoId;
+                context.SaveChanges();
+            }
+        }
+
+        public void EliminarArtigo(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                Artigo artigo = context.Artigos.FirstOrDefault(a => a.Id == id);
+
+                if (artigo == null)
+                    throw new InvalidOperationException("Artigo não encontrado.");
+
+                context.Artigos.Remove(artigo);
+                context.SaveChanges();
             }
         }
     }
+}

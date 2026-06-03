@@ -30,9 +30,14 @@
         {
             this.lblBemVinda = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.gestãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comprasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.relatóriosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestaotool = new System.Windows.Forms.ToolStripMenuItem();
+            this.artigostool = new System.Windows.Forms.ToolStripMenuItem();
+            this.tiposDeArtigoTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.orcamentosTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.comprasTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.planeamentoComprasTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.relatóriosTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.estatísticasTool = new System.Windows.Forms.ToolStripMenuItem();
             this.sairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblCompraAberta = new System.Windows.Forms.Label();
             this.btnModoCompra = new System.Windows.Forms.Button();
@@ -58,9 +63,9 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gestãoToolStripMenuItem,
-            this.comprasToolStripMenuItem,
-            this.relatóriosToolStripMenuItem,
+            this.gestaotool,
+            this.comprasTool,
+            this.relatóriosTool,
             this.sairToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -68,29 +73,73 @@
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // gestãoToolStripMenuItem
+            // gestaotool
             // 
-            this.gestãoToolStripMenuItem.Name = "gestãoToolStripMenuItem";
-            this.gestãoToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-            this.gestãoToolStripMenuItem.Text = "Gestão";
+            this.gestaotool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.artigostool,
+            this.tiposDeArtigoTool,
+            this.orcamentosTool});
+            this.gestaotool.Name = "gestaotool";
+            this.gestaotool.Size = new System.Drawing.Size(55, 20);
+            this.gestaotool.Text = "Gestão";
             // 
-            // comprasToolStripMenuItem
+            // artigostool
             // 
-            this.comprasToolStripMenuItem.Name = "comprasToolStripMenuItem";
-            this.comprasToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.comprasToolStripMenuItem.Text = "Compras";
+            this.artigostool.Name = "artigostool";
+            this.artigostool.Size = new System.Drawing.Size(180, 22);
+            this.artigostool.Text = "Artigos";
+            this.artigostool.Click += new System.EventHandler(this.artigostool_Click);
             // 
-            // relatóriosToolStripMenuItem
+            // tiposDeArtigoTool
             // 
-            this.relatóriosToolStripMenuItem.Name = "relatóriosToolStripMenuItem";
-            this.relatóriosToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
-            this.relatóriosToolStripMenuItem.Text = "Relatórios";
+            this.tiposDeArtigoTool.Name = "tiposDeArtigoTool";
+            this.tiposDeArtigoTool.Size = new System.Drawing.Size(180, 22);
+            this.tiposDeArtigoTool.Text = "Tipos de Artigo";
+            this.tiposDeArtigoTool.Click += new System.EventHandler(this.tiposDeArtigoTool_Click);
+            // 
+            // orcamentosTool
+            // 
+            this.orcamentosTool.Name = "orcamentosTool";
+            this.orcamentosTool.Size = new System.Drawing.Size(180, 22);
+            this.orcamentosTool.Text = "Orçamentos";
+            this.orcamentosTool.Click += new System.EventHandler(this.orcamentosTool_Click);
+            // 
+            // comprasTool
+            // 
+            this.comprasTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.planeamentoComprasTool});
+            this.comprasTool.Name = "comprasTool";
+            this.comprasTool.Size = new System.Drawing.Size(67, 20);
+            this.comprasTool.Text = "Compras";
+            // 
+            // planeamentoComprasTool
+            // 
+            this.planeamentoComprasTool.Name = "planeamentoComprasTool";
+            this.planeamentoComprasTool.Size = new System.Drawing.Size(195, 22);
+            this.planeamentoComprasTool.Text = "Planeamento Compras";
+            this.planeamentoComprasTool.Click += new System.EventHandler(this.planeamentoComprasTool_Click);
+            // 
+            // relatóriosTool
+            // 
+            this.relatóriosTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.estatísticasTool});
+            this.relatóriosTool.Name = "relatóriosTool";
+            this.relatóriosTool.Size = new System.Drawing.Size(71, 20);
+            this.relatóriosTool.Text = "Relatórios";
+            // 
+            // estatísticasTool
+            // 
+            this.estatísticasTool.Name = "estatísticasTool";
+            this.estatísticasTool.Size = new System.Drawing.Size(180, 22);
+            this.estatísticasTool.Text = "Estatísticas";
+            this.estatísticasTool.Click += new System.EventHandler(this.estatísticasTool_Click);
             // 
             // sairToolStripMenuItem
             // 
             this.sairToolStripMenuItem.Name = "sairToolStripMenuItem";
             this.sairToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
             this.sairToolStripMenuItem.Text = "Sair";
+            this.sairToolStripMenuItem.Click += new System.EventHandler(this.sairToolStripMenuItem_Click);
             // 
             // lblCompraAberta
             // 
@@ -114,6 +163,7 @@
             this.btnModoCompra.TabIndex = 6;
             this.btnModoCompra.Text = "Modo Compra";
             this.btnModoCompra.UseVisualStyleBackColor = false;
+            this.btnModoCompra.Click += new System.EventHandler(this.btnModoCompra_Click);
             // 
             // btnAtualizar
             // 
@@ -125,6 +175,7 @@
             this.btnAtualizar.TabIndex = 7;
             this.btnAtualizar.Text = "Atualizar";
             this.btnAtualizar.UseVisualStyleBackColor = true;
+            this.btnAtualizar.Click += new System.EventHandler(this.btnAtualizar_Click);
             // 
             // dataGridView1
             // 
@@ -134,6 +185,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(602, 170);
             this.dataGridView1.TabIndex = 8;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // FormPrincipal
             // 
@@ -149,6 +201,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormPrincipal";
             this.Text = "FormPrincipal";
+            this.Load += new System.EventHandler(this.FormPrincipal_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -161,13 +214,18 @@
 
         private System.Windows.Forms.Label lblBemVinda;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem gestãoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem comprasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem relatóriosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gestaotool;
+        private System.Windows.Forms.ToolStripMenuItem comprasTool;
+        private System.Windows.Forms.ToolStripMenuItem relatóriosTool;
         private System.Windows.Forms.ToolStripMenuItem sairToolStripMenuItem;
         private System.Windows.Forms.Label lblCompraAberta;
         private System.Windows.Forms.Button btnModoCompra;
         private System.Windows.Forms.Button btnAtualizar;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ToolStripMenuItem artigostool;
+        private System.Windows.Forms.ToolStripMenuItem tiposDeArtigoTool;
+        private System.Windows.Forms.ToolStripMenuItem orcamentosTool;
+        private System.Windows.Forms.ToolStripMenuItem planeamentoComprasTool;
+        private System.Windows.Forms.ToolStripMenuItem estatísticasTool;
     }
 }
