@@ -24,7 +24,15 @@ namespace iShoppingKelly.Views
 
             using (AppDbContext context = new AppDbContext())
             {
-                comboBoxFiltrarTipo.DataSource = context.TiposArtigo.ToList();
+                List<TipoArtigo> tipos = context.TiposArtigo.ToList();
+
+                TipoArtigo todos = new TipoArtigo();
+                todos.Id = 0;
+                todos.Nome = "Todos";
+
+                tipos.Insert(0, todos);
+
+                comboBoxFiltrarTipo.DataSource = tipos;
             }
         }
 
@@ -67,18 +75,31 @@ namespace iShoppingKelly.Views
 
             using (AppDbContext context = new AppDbContext())
             {
-                dataGridView4.DataSource = context.Artigos
-                    .Where(a => a.TipoArtigoId == tipo.Id)
-                    .Select(a => new
-                    {
-                        a.Id,
-                        a.Nome,
-                        Tipo = a.TipoArtigo.Nome
-                    })
-                    .ToList();
+                if (tipo.Id == 0)
+                {
+                    dataGridView4.DataSource = context.Artigos
+                        .Select(a => new
+                        {
+                            a.Id,
+                            a.Nome,
+                            Tipo = a.TipoArtigo.Nome
+                        })
+                        .ToList();
+                }
+                else
+                {
+                    dataGridView4.DataSource = context.Artigos
+                        .Where(a => a.TipoArtigoId == tipo.Id)
+                        .Select(a => new
+                        {
+                            a.Id,
+                            a.Nome,
+                            Tipo = a.TipoArtigo.Nome
+                        })
+                        .ToList();
+                }
             }
         }
-
         private void btnNovoArtigo_Click(object sender, EventArgs e)
         {
             TipoArtigo tipoSelecionado =

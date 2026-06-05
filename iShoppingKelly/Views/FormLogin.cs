@@ -28,6 +28,8 @@ namespace iShoppingKelly.Views
         }
         private void btnEntrar_Click(object sender, EventArgs e)
         {
+          
+
             if (string.IsNullOrWhiteSpace(txtUser.Text))
             {
                 MessageBox.Show("Preencha o username.");

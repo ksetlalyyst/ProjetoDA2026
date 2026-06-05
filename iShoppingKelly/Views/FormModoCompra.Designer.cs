@@ -36,12 +36,12 @@
             this.lblResulOrc = new System.Windows.Forms.Label();
             this.lblOrcMes = new System.Windows.Forms.Label();
             this.lblItensCompra = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView8 = new System.Windows.Forms.DataGridView();
             this.btnFecharCompra = new System.Windows.Forms.Button();
             this.btnAdquirido = new System.Windows.Forms.Button();
             this.btnItemNPrevi = new System.Windows.Forms.Button();
             this.boxCompraSem.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             this.SuspendLayout();
             // 
             // boxCompraSem
@@ -128,17 +128,17 @@
             this.lblItensCompra.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblItensCompra.Location = new System.Drawing.Point(18, 131);
             this.lblItensCompra.Name = "lblItensCompra";
-            this.lblItensCompra.Size = new System.Drawing.Size(130, 16);
+            this.lblItensCompra.Size = new System.Drawing.Size(124, 16);
             this.lblItensCompra.TabIndex = 6;
             this.lblItensCompra.Text = "Itens da Compra:";
             // 
-            // dataGridView1
+            // dataGridView8
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(21, 150);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(596, 150);
-            this.dataGridView1.TabIndex = 7;
+            this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView8.Location = new System.Drawing.Point(21, 150);
+            this.dataGridView8.Name = "dataGridView8";
+            this.dataGridView8.Size = new System.Drawing.Size(596, 150);
+            this.dataGridView8.TabIndex = 7;
             // 
             // btnFecharCompra
             // 
@@ -152,6 +152,7 @@
             this.btnFecharCompra.TabIndex = 18;
             this.btnFecharCompra.Text = "Fechar Compra";
             this.btnFecharCompra.UseVisualStyleBackColor = false;
+            this.btnFecharCompra.Click += new System.EventHandler(this.btnFecharCompra_Click);
             // 
             // btnAdquirido
             // 
@@ -165,6 +166,7 @@
             this.btnAdquirido.TabIndex = 17;
             this.btnAdquirido.Text = "Marcar Adquirido";
             this.btnAdquirido.UseVisualStyleBackColor = false;
+            this.btnAdquirido.Click += new System.EventHandler(this.btnAdquirido_Click);
             // 
             // btnItemNPrevi
             // 
@@ -178,6 +180,7 @@
             this.btnItemNPrevi.TabIndex = 16;
             this.btnItemNPrevi.Text = "+ Item não previsto";
             this.btnItemNPrevi.UseVisualStyleBackColor = false;
+            this.btnItemNPrevi.Click += new System.EventHandler(this.btnItemNPrevi_Click);
             // 
             // FormModoCompra
             // 
@@ -187,14 +190,14 @@
             this.Controls.Add(this.btnFecharCompra);
             this.Controls.Add(this.btnAdquirido);
             this.Controls.Add(this.btnItemNPrevi);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridView8);
             this.Controls.Add(this.lblItensCompra);
             this.Controls.Add(this.boxCompraSem);
             this.Name = "FormModoCompra";
             this.Text = "FormModoCompra";
             this.boxCompraSem.ResumeLayout(false);
             this.boxCompraSem.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,7 +213,7 @@
         private System.Windows.Forms.Label lblTotalGasto;
         private System.Windows.Forms.Label lblResulOrc;
         private System.Windows.Forms.Label lblItensCompra;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView8;
         private System.Windows.Forms.Button btnFecharCompra;
         private System.Windows.Forms.Button btnAdquirido;
         private System.Windows.Forms.Button btnItemNPrevi;

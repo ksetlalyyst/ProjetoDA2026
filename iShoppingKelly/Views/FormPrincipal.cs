@@ -51,7 +51,7 @@ namespace iShoppingKelly.Views
 
         private void orcamentosTool_Click(object sender, EventArgs e)
         {
-            FormOrcamentos form = new FormOrcamentos();
+            FormOrcamentos form = new FormOrcamentos(utilizadorAtual);
             this.Hide();
             form.ShowDialog();
             this.Show();
@@ -59,7 +59,7 @@ namespace iShoppingKelly.Views
 
         private void planeamentoComprasTool_Click(object sender, EventArgs e)
         {
-            FormPlaneamentoCompras form = new FormPlaneamentoCompras();
+            FormPlaneamentoCompras form = new FormPlaneamentoCompras(utilizadorAtual);
             this.Hide();
             form.ShowDialog();
             this.Show();
@@ -74,11 +74,34 @@ namespace iShoppingKelly.Views
         }
 
         private void btnModoCompra_Click(object sender, EventArgs e)
-        {
-            FormModoCompra form = new FormModoCompra();
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+        { 
+            if (dataGridView1.CurrentRow == null)
+            {
+                MessageBox.Show("Selecione uma compra.");
+                return;
+            }
+
+            int id = (int)dataGridView1.CurrentRow.Cells["Id"].Value;
+
+            using (AppDbContext context = new AppDbContext())
+            {
+                Compra compra = context.Compras
+                    .FirstOrDefault(c => c.Id == id);
+
+                if (compra == null)
+                {
+                    MessageBox.Show("Compra não encontrada.");
+                    return;
+                }
+
+                FormModoCompra form = new FormModoCompra(
+                        compra,
+                        utilizadorAtual);
+
+                this.Hide();
+                form.ShowDialog();
+                this.Show();
+            }
         }
 
         private void btnAtualizar_Click(object sender, EventArgs e)

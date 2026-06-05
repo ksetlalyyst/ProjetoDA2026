@@ -28,82 +28,90 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnEliminarOrc = new System.Windows.Forms.Button();
-            this.btnEditarOrc = new System.Windows.Forms.Button();
-            this.btnNovoOrc = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.txtNomeTipoArt = new System.Windows.Forms.TextBox();
+            this.dataGridView6 = new System.Windows.Forms.DataGridView();
+            this.btnEliminarNovaCom = new System.Windows.Forms.Button();
+            this.btnEditarNovaCom = new System.Windows.Forms.Button();
+            this.btnNovaCompra = new System.Windows.Forms.Button();
+            this.btnExportar = new System.Windows.Forms.Button();
+            this.txtFiltro = new System.Windows.Forms.TextBox();
             this.lblNomeTipoArt = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.txtNomeCompra = new System.Windows.Forms.TextBox();
+            this.lblNomeCompra = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dataGridView6
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 34);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(555, 175);
-            this.dataGridView1.TabIndex = 23;
+            this.dataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView6.Location = new System.Drawing.Point(10, 65);
+            this.dataGridView6.Name = "dataGridView6";
+            this.dataGridView6.Size = new System.Drawing.Size(555, 175);
+            this.dataGridView6.TabIndex = 23;
+            this.dataGridView6.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView6_CellContentClick);
             // 
-            // btnEliminarOrc
+            // btnEliminarNovaCom
             // 
-            this.btnEliminarOrc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btnEliminarOrc.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEliminarOrc.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEliminarOrc.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnEliminarOrc.Location = new System.Drawing.Point(242, 215);
-            this.btnEliminarOrc.Name = "btnEliminarOrc";
-            this.btnEliminarOrc.Size = new System.Drawing.Size(86, 34);
-            this.btnEliminarOrc.TabIndex = 22;
-            this.btnEliminarOrc.Text = "Eliminar";
-            this.btnEliminarOrc.UseVisualStyleBackColor = false;
+            this.btnEliminarNovaCom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnEliminarNovaCom.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEliminarNovaCom.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEliminarNovaCom.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnEliminarNovaCom.Location = new System.Drawing.Point(240, 246);
+            this.btnEliminarNovaCom.Name = "btnEliminarNovaCom";
+            this.btnEliminarNovaCom.Size = new System.Drawing.Size(86, 34);
+            this.btnEliminarNovaCom.TabIndex = 22;
+            this.btnEliminarNovaCom.Text = "Eliminar";
+            this.btnEliminarNovaCom.UseVisualStyleBackColor = false;
+            this.btnEliminarNovaCom.Click += new System.EventHandler(this.btnEliminarNovaCom_Click);
             // 
-            // btnEditarOrc
+            // btnEditarNovaCom
             // 
-            this.btnEditarOrc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btnEditarOrc.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEditarOrc.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditarOrc.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnEditarOrc.Location = new System.Drawing.Point(140, 215);
-            this.btnEditarOrc.Name = "btnEditarOrc";
-            this.btnEditarOrc.Size = new System.Drawing.Size(86, 34);
-            this.btnEditarOrc.TabIndex = 21;
-            this.btnEditarOrc.Text = "Editar";
-            this.btnEditarOrc.UseVisualStyleBackColor = false;
+            this.btnEditarNovaCom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.btnEditarNovaCom.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEditarNovaCom.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditarNovaCom.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnEditarNovaCom.Location = new System.Drawing.Point(138, 246);
+            this.btnEditarNovaCom.Name = "btnEditarNovaCom";
+            this.btnEditarNovaCom.Size = new System.Drawing.Size(86, 34);
+            this.btnEditarNovaCom.TabIndex = 21;
+            this.btnEditarNovaCom.Text = "Editar";
+            this.btnEditarNovaCom.UseVisualStyleBackColor = false;
+            this.btnEditarNovaCom.Click += new System.EventHandler(this.btnEditarNovaCom_Click);
             // 
-            // btnNovoOrc
+            // btnNovaCompra
             // 
-            this.btnNovoOrc.BackColor = System.Drawing.Color.Fuchsia;
-            this.btnNovoOrc.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnNovoOrc.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNovoOrc.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnNovoOrc.Location = new System.Drawing.Point(12, 215);
-            this.btnNovoOrc.Name = "btnNovoOrc";
-            this.btnNovoOrc.Size = new System.Drawing.Size(111, 34);
-            this.btnNovoOrc.TabIndex = 20;
-            this.btnNovoOrc.Text = "Nova Compra";
-            this.btnNovoOrc.UseVisualStyleBackColor = false;
+            this.btnNovaCompra.BackColor = System.Drawing.Color.Fuchsia;
+            this.btnNovaCompra.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnNovaCompra.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNovaCompra.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnNovaCompra.Location = new System.Drawing.Point(10, 246);
+            this.btnNovaCompra.Name = "btnNovaCompra";
+            this.btnNovaCompra.Size = new System.Drawing.Size(111, 34);
+            this.btnNovaCompra.TabIndex = 20;
+            this.btnNovaCompra.Text = "Nova Compra";
+            this.btnNovaCompra.UseVisualStyleBackColor = false;
+            this.btnNovaCompra.Click += new System.EventHandler(this.btnNovaCompra_Click);
             // 
-            // button1
+            // btnExportar
             // 
-            this.button1.BackColor = System.Drawing.Color.Purple;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.Location = new System.Drawing.Point(347, 215);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 34);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Exportar CSV";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnExportar.BackColor = System.Drawing.Color.Purple;
+            this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExportar.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportar.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnExportar.Location = new System.Drawing.Point(345, 246);
+            this.btnExportar.Name = "btnExportar";
+            this.btnExportar.Size = new System.Drawing.Size(110, 34);
+            this.btnExportar.TabIndex = 24;
+            this.btnExportar.Text = "Exportar CSV";
+            this.btnExportar.UseVisualStyleBackColor = false;
+            this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
             // 
-            // txtNomeTipoArt
+            // txtFiltro
             // 
-            this.txtNomeTipoArt.Location = new System.Drawing.Point(61, 12);
-            this.txtNomeTipoArt.Name = "txtNomeTipoArt";
-            this.txtNomeTipoArt.Size = new System.Drawing.Size(504, 20);
-            this.txtNomeTipoArt.TabIndex = 26;
+            this.txtFiltro.Location = new System.Drawing.Point(61, 12);
+            this.txtFiltro.Name = "txtFiltro";
+            this.txtFiltro.Size = new System.Drawing.Size(504, 20);
+            this.txtFiltro.TabIndex = 26;
+            this.txtFiltro.TextChanged += new System.EventHandler(this.txtFiltro_TextChanged);
             // 
             // lblNomeTipoArt
             // 
@@ -114,21 +122,40 @@
             this.lblNomeTipoArt.TabIndex = 25;
             this.lblNomeTipoArt.Text = "Filtrar:";
             // 
+            // txtNomeCompra
+            // 
+            this.txtNomeCompra.Location = new System.Drawing.Point(61, 39);
+            this.txtNomeCompra.Name = "txtNomeCompra";
+            this.txtNomeCompra.Size = new System.Drawing.Size(504, 20);
+            this.txtNomeCompra.TabIndex = 28;
+            // 
+            // lblNomeCompra
+            // 
+            this.lblNomeCompra.AutoSize = true;
+            this.lblNomeCompra.Location = new System.Drawing.Point(16, 39);
+            this.lblNomeCompra.Name = "lblNomeCompra";
+            this.lblNomeCompra.Size = new System.Drawing.Size(38, 13);
+            this.lblNomeCompra.TabIndex = 27;
+            this.lblNomeCompra.Text = "Nome:";
+            // 
             // FormPlaneamentoCompras
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(577, 266);
-            this.Controls.Add(this.txtNomeTipoArt);
+            this.ClientSize = new System.Drawing.Size(577, 299);
+            this.Controls.Add(this.txtNomeCompra);
+            this.Controls.Add(this.lblNomeCompra);
+            this.Controls.Add(this.txtFiltro);
             this.Controls.Add(this.lblNomeTipoArt);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.btnEliminarOrc);
-            this.Controls.Add(this.btnEditarOrc);
-            this.Controls.Add(this.btnNovoOrc);
+            this.Controls.Add(this.btnExportar);
+            this.Controls.Add(this.dataGridView6);
+            this.Controls.Add(this.btnEliminarNovaCom);
+            this.Controls.Add(this.btnEditarNovaCom);
+            this.Controls.Add(this.btnNovaCompra);
             this.Name = "FormPlaneamentoCompras";
             this.Text = "FormPlaneamentoCompras";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.Load += new System.EventHandler(this.FormPlaneamentoCompras_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,12 +163,14 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button btnEliminarOrc;
-        private System.Windows.Forms.Button btnEditarOrc;
-        private System.Windows.Forms.Button btnNovoOrc;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox txtNomeTipoArt;
+        private System.Windows.Forms.DataGridView dataGridView6;
+        private System.Windows.Forms.Button btnEliminarNovaCom;
+        private System.Windows.Forms.Button btnEditarNovaCom;
+        private System.Windows.Forms.Button btnNovaCompra;
+        private System.Windows.Forms.Button btnExportar;
+        private System.Windows.Forms.TextBox txtFiltro;
         private System.Windows.Forms.Label lblNomeTipoArt;
+        private System.Windows.Forms.TextBox txtNomeCompra;
+        private System.Windows.Forms.Label lblNomeCompra;
     }
 }

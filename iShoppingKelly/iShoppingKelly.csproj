@@ -79,12 +79,6 @@
     <Compile Include="Views\FormArtigo.Designer.cs">
       <DependentUpon>FormArtigo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\FormSelecionarTipo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\FormSelecionarTipo.Designer.cs">
-      <DependentUpon>FormSelecionarTipo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\FormEditarCompras.cs">
       <SubType>Form</SubType>
     </Compile>
