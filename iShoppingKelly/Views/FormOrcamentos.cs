@@ -1,143 +1,167 @@
-﻿using iShoppingKelly.Controllers;
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
 using iShoppingKelly.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
 {
-    
-    public partial class FormOrcamentos : System.Windows.Forms.Form
+    public partial class FormOrcamentos : Form
     {
-        private Utilizador utilizadorAtual;
+        private readonly Utilizador utilizadorAtual;
+
         public FormOrcamentos(Utilizador utilizador)
         {
             InitializeComponent();
             utilizadorAtual = utilizador;
-        }
-        private void AtualizarDocumentos()
-        {
-            dataGridView5.DataSource = null;
-
-            using (AppDbContext context = new AppDbContext())
-            {
-                dataGridView5.DataSource = context.Orcamentos.Select(o => new
-                {
-                    o.Id,
-                    o.Mes,
-                    o.Ano,
-                    o.Valor,
-                    CriadoPor = o.CriadoPor.Nome
-                })
-                    .ToList();
-            }
-        }
-
-        private void CarregarMeses()
-        {
-            comboMes.Items.Clear();
-
-            for (int i = 1; i <= 12; i++)
-            {
-                comboMes.Items.Add(i);
-            }
-        }
-
-        private void CarregarAnos()
-        {
-            comboAno.Items.Clear();
-
-            for (int i = 2024; i <= 2035; i++)
-            {
-                comboAno.Items.Add(i);
-            }
         }
 
         private void FormOrcamentos_Load(object sender, EventArgs e)
         {
             CarregarMeses();
             CarregarAnos();
+            AtualizarOrcamentos();
+        }
 
-            AtualizarDocumentos();
+        private void CarregarMeses()
+        {
+            comboMes.Items.Clear();
+
+            comboMes.Items.Add(new MesItem(1, "Janeiro"));
+            comboMes.Items.Add(new MesItem(2, "Fevereiro"));
+            comboMes.Items.Add(new MesItem(3, "Março"));
+            comboMes.Items.Add(new MesItem(4, "Abril"));
+            comboMes.Items.Add(new MesItem(5, "Maio"));
+            comboMes.Items.Add(new MesItem(6, "Junho"));
+            comboMes.Items.Add(new MesItem(7, "Julho"));
+            comboMes.Items.Add(new MesItem(8, "Agosto"));
+            comboMes.Items.Add(new MesItem(9, "Setembro"));
+            comboMes.Items.Add(new MesItem(10, "Outubro"));
+            comboMes.Items.Add(new MesItem(11, "Novembro"));
+            comboMes.Items.Add(new MesItem(12, "Dezembro"));
+
+            foreach (MesItem item in comboMes.Items)
+            {
+                if (item.Numero == DateTime.Now.Month)
+                {
+                    comboMes.SelectedItem = item;
+                    break;
+                }
+            }
+        }
+
+        private void CarregarAnos()
+        {
+            comboAno.Items.Clear();
+            for (int ano = 2018; ano <= DateTime.Now.Year + 10; ano++)
+            {
+                comboAno.Items.Add(ano);
+            }
+            comboAno.SelectedItem = DateTime.Now.Year;
+        }
+
+        private void AtualizarOrcamentos()
+        {
+            OrcamentoController orcamentoController = new OrcamentoController();
+
+            dataGridView5.DataSource = orcamentoController.ListarTodos()
+                .Select(o => new
+                {
+                    o.Id,
+                    o.Mes,
+                    o.Ano,
+                    o.Valor
+                })
+                .ToList();
         }
 
         private void btnNovoOrc_Click(object sender, EventArgs e)
         {
-            OrcamentoController controller = new OrcamentoController();
+            int mes;
+            int ano;
+            decimal valor;
+
+            if (!TryLerDados(out mes, out ano, out valor))
+            {
+                return;
+            }
 
             try
             {
-                controller.AdicionarOrcamento
-                    (Convert.ToInt32(comboMes.Text),
-                    Convert.ToInt32(comboAno.Text),
-                    Convert.ToDecimal(txtValor.Text),
-                    utilizadorAtual.Id);
+                OrcamentoController orcamentoController = new OrcamentoController();
 
+                Orcamento existente = orcamentoController.ObterOrcamentoDoMes(mes, ano);
+                if (existente != null)
+                {
+                    MessageBox.Show("Já existe orçamento para esse mês e ano.");
+                    return;
+                }
 
-                AtualizarDocumentos();
+                orcamentoController.Criar(mes, ano, valor, utilizadorAtual.Id);
                 txtValor.Clear();
+                AtualizarOrcamentos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Erro ao criar orçamento: " + ex.Message);
             }
         }
 
         private void btnEditarOrc_Click(object sender, EventArgs e)
         {
-            if (dataGridView5.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(out id))
             {
                 MessageBox.Show("Selecione um orçamento para editar.");
                 return;
             }
 
-            int id = (int)dataGridView5.CurrentRow.Cells["Id"].Value;
-
-            OrcamentoController controller = new OrcamentoController();
+            int mes;
+            int ano;
+            decimal valor;
+            if (!TryLerDados(out mes, out ano, out valor))
+            {
+                return;
+            }
 
             try
             {
-                controller.EditarOrcamento(id, 
-                    Convert.ToInt32(comboMes.Text),
-                    Convert.ToInt32(comboAno.Text),
-                    Convert.ToDecimal(txtValor.Text));
+                OrcamentoController orcamentoController = new OrcamentoController();
 
-
-                AtualizarDocumentos();
+                orcamentoController.Atualizar(id, mes, ano, valor, utilizadorAtual.Id);
+                AtualizarOrcamentos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Erro ao editar orçamento: " + ex.Message);
             }
         }
 
         private void btnEliminarOrc_Click(object sender, EventArgs e)
         {
-            if (dataGridView5.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(out id))
             {
                 MessageBox.Show("Selecione um orçamento.");
                 return;
             }
 
-            int id = (int)dataGridView5.CurrentRow.Cells["Id"].Value;
-
-            OrcamentoController controller = new OrcamentoController();
+            if (MessageBox.Show("Eliminar este orçamento?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
 
             try
             {
-                controller.EliminarOrcamento(id);
-                AtualizarDocumentos();
+                OrcamentoController orcamentoController = new OrcamentoController();
+
+                orcamentoController.Eliminar(id);
+                txtValor.Clear();
+                AtualizarOrcamentos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Erro ao eliminar orçamento: " + ex.Message);
             }
         }
 
@@ -148,9 +172,82 @@ namespace iShoppingKelly.Views
                 return;
             }
 
-            comboMes.Text = dataGridView5.CurrentRow.Cells["Mes"].Value.ToString();
-            comboAno.Text = dataGridView5.CurrentRow.Cells["Ano"].Value.ToString();
-            txtValor.Text = dataGridView5.CurrentRow.Cells["Valor"].Value.ToString();
+            int mes;
+            if (int.TryParse(Convert.ToString(dataGridView5.CurrentRow.Cells["Mes"].Value), out mes))
+            {
+                SelecionarMes(mes);
+            }
+
+            comboAno.Text = Convert.ToString(dataGridView5.CurrentRow.Cells["Ano"].Value);
+            txtValor.Text = Convert.ToString(dataGridView5.CurrentRow.Cells["Valor"].Value);
+        }
+
+        private bool TryLerDados(out int mes, out int ano, out decimal valor)
+        {
+            mes = 0;
+            ano = 0;
+            valor = 0;
+
+            MesItem mesItem = comboMes.SelectedItem as MesItem;
+            if (mesItem == null)
+            {
+                MessageBox.Show("Selecione um mês válido.");
+                return false;
+            }
+
+            mes = mesItem.Numero;
+
+            if (!int.TryParse(Convert.ToString(comboAno.Text), out ano))
+            {
+                MessageBox.Show("Selecione um ano válido.");
+                return false;
+            }
+
+            if (!decimal.TryParse(txtValor.Text, out valor) || valor < 0)
+            {
+                MessageBox.Show("Introduza um valor válido.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SelecionarMes(int mes)
+        {
+            foreach (MesItem item in comboMes.Items)
+            {
+                if (item.Numero == mes)
+                {
+                    comboMes.SelectedItem = item;
+                    return;
+                }
+            }
+        }
+
+        private bool TryGetSelectedId(out int id)
+        {
+            id = 0;
+            return dataGridView5.CurrentRow != null
+                && dataGridView5.Columns.Contains("Id")
+                && int.TryParse(Convert.ToString(dataGridView5.CurrentRow.Cells["Id"].Value), out id);
+        }
+
+        private class MesItem
+        {
+            public MesItem(int numero, string nome)
+            {
+                Numero = numero;
+                Nome = nome;
+            }
+
+            public int Numero { get; private set; }
+
+            public string Nome { get; private set; }
+
+            public override string ToString()
+            {
+                return Nome;
+            }
         }
     }
 }

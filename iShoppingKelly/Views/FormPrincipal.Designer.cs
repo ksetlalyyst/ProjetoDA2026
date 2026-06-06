@@ -43,6 +43,7 @@
             this.btnModoCompra = new System.Windows.Forms.Button();
             this.btnAtualizar = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.utilizadoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -76,6 +77,7 @@
             // gestaotool
             // 
             this.gestaotool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.utilizadoresToolStripMenuItem,
             this.artigostool,
             this.tiposDeArtigoTool,
             this.orcamentosTool});
@@ -130,7 +132,7 @@
             // estatísticasTool
             // 
             this.estatísticasTool.Name = "estatísticasTool";
-            this.estatísticasTool.Size = new System.Drawing.Size(180, 22);
+            this.estatísticasTool.Size = new System.Drawing.Size(131, 22);
             this.estatísticasTool.Text = "Estatísticas";
             this.estatísticasTool.Click += new System.EventHandler(this.estatísticasTool_Click);
             // 
@@ -187,6 +189,13 @@
             this.dataGridView1.TabIndex = 8;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
+            // utilizadoresToolStripMenuItem
+            // 
+            this.utilizadoresToolStripMenuItem.Name = "utilizadoresToolStripMenuItem";
+            this.utilizadoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.utilizadoresToolStripMenuItem.Text = "Utilizadores";
+            this.utilizadoresToolStripMenuItem.Click += new System.EventHandler(this.utilizadoresToolStripMenuItem_Click);
+            // 
             // FormPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,5 +236,6 @@
         private System.Windows.Forms.ToolStripMenuItem orcamentosTool;
         private System.Windows.Forms.ToolStripMenuItem planeamentoComprasTool;
         private System.Windows.Forms.ToolStripMenuItem estatísticasTool;
+        private System.Windows.Forms.ToolStripMenuItem utilizadoresToolStripMenuItem;
     }
 }

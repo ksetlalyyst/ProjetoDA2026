@@ -1,104 +1,134 @@
-﻿using iShoppingKelly.Controllers;
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
+using iShoppingKelly.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
 {
-    public partial class FormTiposArtigo : System.Windows.Forms.Form
+    public partial class FormTiposArtigo : Form
     {
         public FormTiposArtigo()
         {
             InitializeComponent();
         }
 
-        private void AtualizarTipos()
-        {
-            dataGridView3.DataSource = null;
-
-            using (AppDbContext context = new AppDbContext())
-            {
-                dataGridView3.DataSource = context.TiposArtigo.Select(t => new
-                {
-                    t.Id,
-                    t.Nome
-                })
-                    .ToList();
-            }
-        }
         private void FormTiposArtigo_Load(object sender, EventArgs e)
         {
             AtualizarTipos();
         }
 
-        private void btnNovoTipo_Click(object sender, EventArgs e)
+        private void AtualizarTipos()
         {
-            TipoArtigoController controller = new TipoArtigoController();
+            TipoArtigoController tipoArtigoController = new TipoArtigoController();
 
-            try
-            {
-                controller.AdicionarTipoArtigo(txtNomeTipoArt.Text);
-
-                AtualizarTipos();
-
-                txtNomeTipoArt.Clear();
-            } catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            dataGridView3.DataSource = tipoArtigoController.ListarTodos()
+                .Select(t => new
+                {
+                    t.Id,
+                    t.Nome
+                })
+                .ToList();
         }
 
-        private void btnEliminarTipo_Click(object sender, EventArgs e)
+        private void btnNovoTipo_Click(object sender, EventArgs e)
         {
-            if(dataGridView3.CurrentRow == null)
+            string nome = txtNomeTipoArt.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(nome))
             {
-                MessageBox.Show("Selecione um tipo para eliminar.");
+                MessageBox.Show("Preencha o nome do tipo de artigo.");
                 return;
             }
 
-            int id = (int)dataGridView3.CurrentRow.Cells["Id"].Value;
+            try
+            {
+                TipoArtigoController tipoArtigoController = new TipoArtigoController();
 
-            TipoArtigoController controller = new TipoArtigoController();
-
-            controller.RemoverTipoArtigo(id);
-            AtualizarTipos();
+                tipoArtigoController.Criar(nome);
+                txtNomeTipoArt.Clear();
+                AtualizarTipos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao criar tipo de artigo: " + ex.Message);
+            }
         }
 
         private void btnEditarTipo_Click(object sender, EventArgs e)
         {
-            if (dataGridView3.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(dataGridView3, out id))
             {
                 MessageBox.Show("Selecione um tipo para editar.");
                 return;
             }
 
-            int id = (int)dataGridView3.CurrentRow.Cells["Id"].Value;
+            string nome = txtNomeTipoArt.Text.Trim();
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                MessageBox.Show("Preencha o nome do tipo de artigo.");
+                return;
+            }
 
-            TipoArtigoController controller = new TipoArtigoController();
+            try
+            {
+                TipoArtigoController tipoArtigoController = new TipoArtigoController();
 
-            controller.EditarTipoArtigo(id, txtNomeTipoArt.Text);
-            AtualizarTipos();
+                tipoArtigoController.Atualizar(id, nome);
+                txtNomeTipoArt.Clear();
+                AtualizarTipos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar tipo de artigo: " + ex.Message);
+            }
         }
-        //funcionalidade extra: ao clicar num tipo, o nome aparece na textbox para facilitar a edição
-        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+
+        private void btnEliminarTipo_Click(object sender, EventArgs e)
         {
-            if(dataGridView3.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(dataGridView3, out id))
+            {
+                MessageBox.Show("Selecione um tipo para eliminar.");
+                return;
+            }
+
+            if (MessageBox.Show("Eliminar este tipo de artigo?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            txtNomeTipoArt.Text = dataGridView3.CurrentRow.Cells["Nome"].Value.ToString();
+            try
+            {
+                TipoArtigoController tipoArtigoController = new TipoArtigoController();
+
+                tipoArtigoController.Eliminar(id);
+                txtNomeTipoArt.Clear();
+                AtualizarTipos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao eliminar tipo de artigo: " + ex.Message);
+            }
         }
 
-        
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView3.CurrentRow == null || !dataGridView3.Columns.Contains("Nome"))
+            {
+                return;
+            }
 
+            txtNomeTipoArt.Text = Convert.ToString(dataGridView3.CurrentRow.Cells["Nome"].Value);
+        }
+
+        private static bool TryGetSelectedId(DataGridView dataGridView, out int id)
+        {
+            id = 0;
+            return dataGridView.CurrentRow != null
+                && dataGridView.Columns.Contains("Id")
+                && int.TryParse(Convert.ToString(dataGridView.CurrentRow.Cells["Id"].Value), out id);
+        }
     }
-
 }

@@ -8,60 +8,72 @@ using System.Threading.Tasks;
 
 namespace iShoppingKelly.Controllers
 {
-    internal class TipoArtigoController
+    public class TipoArtigoController
     {
-        public void AdicionarTipoArtigo(string nome) 
+        public List<TipoArtigo> ListarTodos()
         {
-            if(string.IsNullOrEmpty(nome))
-            {
-                throw new InvalidOperationException("Introduza um nome válido para o tipo de artigo.");
-            }
-
             using (AppDbContext context = new AppDbContext())
             {
-                TipoArtigo tipoExistente = context.TiposArtigo
-                    .FirstOrDefault(t => t.Nome == nome);
+                return context.TiposArtigo
+                    .OrderBy(t => t.Nome)
+                    .ToList();
+            }
+        }
 
-                if (tipoExistente != null)
-                {
-                    throw new InvalidOperationException ("Tipo de artigo já existe.");
-                }
+        public TipoArtigo ObterPorId(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.TiposArtigo
+                    .FirstOrDefault(t => t.Id == id);
+            }
+        }
 
-                TipoArtigo tipo = new TipoArtigo();
-                tipo.Nome = nome;
-                context.TiposArtigo.Add(tipo);
+        public void Criar(string nome)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                TipoArtigo tipoArtigo = new TipoArtigo();
+
+                tipoArtigo.Nome = nome;
+
+                context.TiposArtigo.Add(tipoArtigo);
+
                 context.SaveChanges();
             }
         }
 
-        public void RemoverTipoArtigo(int id)
+        public void Atualizar(int id, string nome)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                TipoArtigo tipo = context.TiposArtigo.FirstOrDefault(t => t.Id == id);
+                TipoArtigo tipoArtigo =
+                    context.TiposArtigo
+                    .FirstOrDefault(t => t.Id == id);
 
-                if (tipo == null)
+                if (tipoArtigo != null)
                 {
-                    throw new InvalidOperationException("Tipo não encontrado.");
+                    tipoArtigo.Nome = nome;
+
+                    context.SaveChanges();
                 }
-                context.TiposArtigo.Remove(tipo);
-                context.SaveChanges();
             }
         }
 
-        public void EditarTipoArtigo(int id, string novoNome)
+        public void Eliminar(int id)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                TipoArtigo tipo = context.TiposArtigo.FirstOrDefault(t => t.Id == id);
+                TipoArtigo tipoArtigo =
+                    context.TiposArtigo
+                    .FirstOrDefault(t => t.Id == id);
 
-                if(tipo == null)
+                if (tipoArtigo != null)
                 {
-                    throw new InvalidOperationException("Tipo não encontrado.");
-                }
+                    context.TiposArtigo.Remove(tipoArtigo);
 
-                tipo.Nome = novoNome;
-                context.SaveChanges();
+                    context.SaveChanges();
+                }
             }
         }
     }

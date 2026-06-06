@@ -10,7 +10,59 @@ namespace iShoppingKelly.Controllers
 {
     public class OrcamentoController
     {
-        public void AdicionarOrcamento(int mes, int ano, decimal valor, int utilizadorId)
+        public List<Orcamento> ListarTodos()
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.Orcamentos
+                    .OrderBy(o => o.Ano)
+                    .ThenBy(o => o.Mes)
+                    .ToList();
+            }
+        }
+
+        public Orcamento ObterPorId(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.Orcamentos
+                    .FirstOrDefault(o => o.Id == id);
+            }
+        }
+
+        public Orcamento ObterOrcamentoDoMes(int mes, int ano)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.Orcamentos
+                    .FirstOrDefault(o =>
+                        o.Mes == mes &&
+                        o.Ano == ano);
+            }
+        }
+
+        public decimal ObterTotalGastoNoMes(int mes, int ano)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.ItensCompra
+                    .Where(i =>
+                        i.Adquirido &&
+                        i.Compra.DataFechada.HasValue &&
+                        i.Compra.DataFechada.Value.Month == mes &&
+                        i.Compra.DataFechada.Value.Year == ano)
+                    .ToList()
+                    .Sum(i =>
+                        (i.QuantidadeAdquirida ?? 0) *
+                        (i.PrecoUnitario ?? 0));
+            }
+        }
+
+        public void Criar(
+            int mes,
+            int ano,
+            decimal valor,
+            int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
@@ -27,40 +79,50 @@ namespace iShoppingKelly.Controllers
             }
         }
 
-        public void EditarOrcamento(int id, int mes, int ano, decimal valor)
+        public void Atualizar(
+            int id,
+            int mes,
+            int ano,
+            decimal valor,
+            int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                Orcamento orcamento = context.Orcamentos.FirstOrDefault(o => o.Id == id);
-                if (orcamento == null)
+                Orcamento orcamento =
+                    context.Orcamentos
+                    .FirstOrDefault(o => o.Id == id);
+
+                if (orcamento != null)
                 {
-                    throw new InvalidOperationException("Orçamento não encontrado");
+                    orcamento.Mes = mes;
+                    orcamento.Ano = ano;
+                    orcamento.Valor = valor;
+
+                    orcamento.AlteradoPorId =
+                        utilizadorId;
+
+                    orcamento.DataAlteracao =
+                        DateTime.Now;
+
+                    context.SaveChanges();
                 }
-
-                orcamento.Mes = mes;
-                orcamento.Ano = ano;
-                orcamento.Valor = valor;
-
-                orcamento.DataAlteracao = DateTime.Now;
-
-                context.SaveChanges();
             }
         }
 
-        public void EliminarOrcamento(int id)
+        public void Eliminar(int id)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                Orcamento orcamento = context.Orcamentos.FirstOrDefault(o => o.Id == id);
+                Orcamento orcamento =
+                    context.Orcamentos
+                    .FirstOrDefault(o => o.Id == id);
 
-                if (orcamento == null)
+                if (orcamento != null)
                 {
-                    throw new InvalidOperationException("Orçamento não encontrado");
+                    context.Orcamentos.Remove(orcamento);
+
+                    context.SaveChanges();
                 }
-
-                context.Orcamentos.Remove(orcamento);
-                context.SaveChanges();
-
             }
         }
     }

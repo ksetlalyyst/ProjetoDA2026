@@ -1,5 +1,4 @@
-﻿using iShoppingKelly.Controllers;
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
 using iShoppingKelly.Models;
 using System;
 using System.Collections.Generic;
@@ -10,173 +9,173 @@ namespace iShoppingKelly.Views
 {
     public partial class FormArtigo : Form
     {
-        
-
         public FormArtigo()
         {
             InitializeComponent();
-            
         }
 
-        private void AtualizarTipos()
+        private void FormArtigo_Load(object sender, EventArgs e)
         {
-            comboBoxFiltrarTipo.DataSource = null;
+            CarregarTipos();
+            AtualizarArtigos();
+        }
 
-            using (AppDbContext context = new AppDbContext())
-            {
-                List<TipoArtigo> tipos = context.TiposArtigo.ToList();
+        private void CarregarTipos()
+        {
+            TipoArtigoController tipoArtigoController = new TipoArtigoController();
+            List<TipoArtigo> tipos = tipoArtigoController.ListarTodos();
 
-                TipoArtigo todos = new TipoArtigo();
-                todos.Id = 0;
-                todos.Nome = "Todos";
+            TipoArtigo todos = new TipoArtigo();
+            todos.Id = 0;
+            todos.Nome = "Todos";
 
-                tipos.Insert(0, todos);
+            tipos.Insert(0, todos);
 
-                comboBoxFiltrarTipo.DataSource = tipos;
-            }
+            comboBoxFiltrarTipo.DataSource = tipos;
+            comboBoxFiltrarTipo.DisplayMember = "Nome";
+            comboBoxFiltrarTipo.ValueMember = "Id";
         }
 
         private void AtualizarArtigos()
         {
-            dataGridView4.DataSource = null;
-            using (AppDbContext context = new AppDbContext())
-            {
-                dataGridView4.DataSource = context.Artigos.Select(a => new
+            ArtigoController artigoController = new ArtigoController();
+            TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+            List<Artigo> artigos = tipo == null || tipo.Id == 0
+                ? artigoController.ListarTodos()
+                : artigoController.ListarPorTipo(tipo.Id);
+
+            dataGridView4.DataSource = artigos
+                .Select(a => new
                 {
                     a.Id,
                     a.Nome,
-                    Tipo = a.TipoArtigo.Nome
-                }).ToList();
-            }
-            /* dataGridView4.Columns["Id"].HeaderText = "Código";
-             dataGridView4.Columns["Nome"].HeaderText = "Nome";
-             dataGridView4.Columns["TipoArtigo"].HeaderText = "Tipo";*/
-        }
-        private void FormArtigo_Load(object sender, EventArgs e)
-        {
-            AtualizarTipos();
-            AtualizarArtigos();
-
-        }
-
-        private void txtFiltrarNome_TextChanged(object sender, EventArgs e)
-        {
-            
+                    Tipo = a.TipoArtigo == null ? "" : a.TipoArtigo.Nome
+                })
+                .ToList();
         }
 
         private void comboBoxFiltrarTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
-
-            if (tipo == null)
-            {
-                return;
-            }
-
-            using (AppDbContext context = new AppDbContext())
-            {
-                if (tipo.Id == 0)
-                {
-                    dataGridView4.DataSource = context.Artigos
-                        .Select(a => new
-                        {
-                            a.Id,
-                            a.Nome,
-                            Tipo = a.TipoArtigo.Nome
-                        })
-                        .ToList();
-                }
-                else
-                {
-                    dataGridView4.DataSource = context.Artigos
-                        .Where(a => a.TipoArtigoId == tipo.Id)
-                        .Select(a => new
-                        {
-                            a.Id,
-                            a.Nome,
-                            Tipo = a.TipoArtigo.Nome
-                        })
-                        .ToList();
-                }
-            }
+            AtualizarArtigos();
         }
+
+        private void txtFiltrarNome_TextChanged(object sender, EventArgs e)
+        {
+        }
+
         private void btnNovoArtigo_Click(object sender, EventArgs e)
         {
-            TipoArtigo tipoSelecionado =
-                comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+            TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+            string nome = txtArtigoNome.Text.Trim();
 
-            if (tipoSelecionado == null)
+            if (tipo == null || tipo.Id == 0)
             {
-                MessageBox.Show("Selecione um tipo.");
+                MessageBox.Show("Selecione um tipo de artigo válido.");
                 return;
             }
 
-            ArtigoController controller = new ArtigoController();
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                MessageBox.Show("Preencha o nome do artigo.");
+                return;
+            }
 
             try
             {
-                controller.AdicionarArtigo(txtArtigoNome.Text, tipoSelecionado.Id);
+                ArtigoController artigoController = new ArtigoController();
 
-                AtualizarArtigos();
-
+                artigoController.Criar(nome, tipo.Id);
                 txtArtigoNome.Clear();
+                AtualizarArtigos();
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Erro ao criar artigo: " + ex.Message);
             }
         }
-    
-        
 
         private void btnEditarArtigo_Click(object sender, EventArgs e)
         {
-            if (dataGridView4.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(dataGridView4, out id))
             {
                 MessageBox.Show("Selecione um artigo.");
                 return;
             }
 
-            TipoArtigo tipoSelecionado =
-                comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+            TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+            string nome = txtArtigoNome.Text.Trim();
 
-            int id = (int)dataGridView4.CurrentRow.Cells["Id"].Value;
+            if (tipo == null || tipo.Id == 0)
+            {
+                MessageBox.Show("Selecione um tipo de artigo válido.");
+                return;
+            }
 
-            ArtigoController controller = new ArtigoController();
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                MessageBox.Show("Preencha o nome do artigo.");
+                return;
+            }
 
-            controller.EditarArtigo(id, txtArtigoNome.Text, tipoSelecionado.Id);
+            try
+            {
+                ArtigoController artigoController = new ArtigoController();
 
-            AtualizarArtigos();
+                artigoController.Atualizar(id, nome, tipo.Id);
+                txtArtigoNome.Clear();
+                AtualizarArtigos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar artigo: " + ex.Message);
+            }
         }
-    
-        
 
         private void btnEliminarArtigo_Click(object sender, EventArgs e)
         {
-            if (dataGridView4.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(dataGridView4, out id))
             {
                 MessageBox.Show("Selecione um artigo.");
                 return;
             }
 
-            int id = (int)dataGridView4.CurrentRow.Cells["Id"].Value;
+            if (MessageBox.Show("Eliminar este artigo?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
 
-            ArtigoController controller = new ArtigoController();
+            try
+            {
+                ArtigoController artigoController = new ArtigoController();
 
-            controller.EliminarArtigo(id);
-
-            AtualizarArtigos();
+                artigoController.Eliminar(id);
+                txtArtigoNome.Clear();
+                AtualizarArtigos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao eliminar artigo: " + ex.Message);
+            }
         }
 
         private void dataGridView4_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridView4.CurrentRow == null)
+            if (dataGridView4.CurrentRow == null || !dataGridView4.Columns.Contains("Nome"))
             {
                 return;
             }
 
-            txtArtigoNome.Text = dataGridView4.CurrentRow.Cells["Nome"]
-                                .Value.ToString();
+            txtArtigoNome.Text = Convert.ToString(dataGridView4.CurrentRow.Cells["Nome"].Value);
+        }
+
+        private static bool TryGetSelectedId(DataGridView dataGridView, out int id)
+        {
+            id = 0;
+            return dataGridView.CurrentRow != null
+                && dataGridView.Columns.Contains("Id")
+                && int.TryParse(Convert.ToString(dataGridView.CurrentRow.Cells["Id"].Value), out id);
         }
     }
 }

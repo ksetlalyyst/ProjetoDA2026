@@ -1,20 +1,15 @@
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
 using iShoppingKelly.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
 {
-    public partial class FormPrincipal : System.Windows.Forms.Form
+    public partial class FormPrincipal : Form
     {
-        private Utilizador utilizadorAtual;
+        private readonly Utilizador utilizadorAtual;
+
         public FormPrincipal(Utilizador utilizador)
         {
             InitializeComponent();
@@ -23,85 +18,61 @@ namespace iShoppingKelly.Views
 
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
-            lblBemVinda.Text = "Bem-Vinda(o) " + utilizadorAtual.Nome + "!";
-
+            lblBemVinda.Text = "Bem-vinda(o) " + (string.IsNullOrWhiteSpace(utilizadorAtual.Nome) ? utilizadorAtual.Username : utilizadorAtual.Nome) + "!";
             AtualizarCompras();
         }
 
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void artigostool_Click(object sender, EventArgs e)
         {
-            FormArtigo form = new FormArtigo();
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+            AbrirForm(new FormArtigo());
         }
 
         private void tiposDeArtigoTool_Click(object sender, EventArgs e)
         {
-            FormTiposArtigo form = new FormTiposArtigo();
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+            AbrirForm(new FormTiposArtigo());
         }
 
         private void orcamentosTool_Click(object sender, EventArgs e)
         {
-            FormOrcamentos form = new FormOrcamentos(utilizadorAtual);
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+            AbrirForm(new FormOrcamentos(utilizadorAtual));
         }
 
         private void planeamentoComprasTool_Click(object sender, EventArgs e)
         {
-            FormPlaneamentoCompras form = new FormPlaneamentoCompras(utilizadorAtual);
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+            AbrirForm(new FormPlaneamentoCompras(utilizadorAtual));
+            AtualizarCompras();
         }
 
         private void estatísticasTool_Click(object sender, EventArgs e)
         {
-            FormEstatísticas form = new FormEstatísticas();
-            this.Hide();
-            form.ShowDialog();
-            this.Show();
+            AbrirForm(new FormEstatísticas(utilizadorAtual));
         }
 
         private void btnModoCompra_Click(object sender, EventArgs e)
-        { 
-            if (dataGridView1.CurrentRow == null)
+        {
+            int id;
+            if (!TryGetSelectedId(out id))
             {
                 MessageBox.Show("Selecione uma compra.");
                 return;
             }
 
-            int id = (int)dataGridView1.CurrentRow.Cells["Id"].Value;
+            CompraController compraController = new CompraController();
 
-            using (AppDbContext context = new AppDbContext())
+            Compra compra = compraController.ObterPorId(id);
+            if (compra == null)
             {
-                Compra compra = context.Compras
-                    .FirstOrDefault(c => c.Id == id);
-
-                if (compra == null)
-                {
-                    MessageBox.Show("Compra não encontrada.");
-                    return;
-                }
-
-                FormModoCompra form = new FormModoCompra(
-                        compra,
-                        utilizadorAtual);
-
-                this.Hide();
-                form.ShowDialog();
-                this.Show();
+                MessageBox.Show("Compra não encontrada.");
+                return;
             }
+
+            AbrirForm(new FormModoCompra(compra, utilizadorAtual));
+            AtualizarCompras();
         }
 
         private void btnAtualizar_Click(object sender, EventArgs e)
@@ -111,25 +82,43 @@ namespace iShoppingKelly.Views
 
         private void AtualizarCompras()
         {
-            dataGridView1.DataSource = null;
+            CompraController compraController = new CompraController();
 
-            using (AppDbContext context = new AppDbContext())
-            {
-                dataGridView1.DataSource = context.Compras
-                    .Where(c => !c.Fechada)
-                    .Select(c => new
-                    {
-                        c.Id,
-                        c.Nome,
-                        c.DataCriacao
-                    })
-                    .ToList();
-            }
+            dataGridView1.DataSource = compraController.ListarPorEstado(false)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Nome,
+                    c.DataCriacao
+                })
+                .ToList();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+        }
 
+        private void AbrirForm(Form form)
+        {
+            Hide();
+            using (form)
+            {
+                form.ShowDialog();
+            }
+            Show();
+        }
+
+        private bool TryGetSelectedId(out int id)
+        {
+            id = 0;
+            return dataGridView1.CurrentRow != null
+                && dataGridView1.Columns.Contains("Id")
+                && int.TryParse(Convert.ToString(dataGridView1.CurrentRow.Cells["Id"].Value), out id);
+        }
+
+        private void utilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirForm(new FormUtilizadores(utilizadorAtual));
         }
     }
 }

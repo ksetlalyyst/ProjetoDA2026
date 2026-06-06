@@ -1,89 +1,70 @@
-﻿using iShoppingKelly.Controllers;
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
 using iShoppingKelly.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
 {
-    public partial class FormLogin : System.Windows.Forms.Form
+    public partial class FormLogin : Form
     {
-       
         public FormLogin()
         {
             InitializeComponent();
-            
         }
+
         private void FormLogin_Load(object sender, EventArgs e)
         {
             txtPassword.PasswordChar = '*';
         }
+
         private void btnEntrar_Click(object sender, EventArgs e)
         {
-          
+            string username = txtUser.Text.Trim();
+            string password = txtPassword.Text;
 
-            if (string.IsNullOrWhiteSpace(txtUser.Text))
+            if (string.IsNullOrWhiteSpace(username))
             {
                 MessageBox.Show("Preencha o username.");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Preencha a password.");
                 return;
             }
 
-            UtilizadorController controller = new UtilizadorController();
-
             try
             {
-                Utilizador utilizador = controller.Login(txtUser.Text, txtPassword.Text);
+                UtilizadorController utilizadorController = new UtilizadorController();
 
-                MessageBox.Show("Login efetuado com sucesso!");
+                Utilizador utilizador = utilizadorController.Login(username, password);
 
-
-                FormPrincipal formPrincipal = new FormPrincipal(utilizador);
-
-                this.Hide();
-                formPrincipal.ShowDialog();
-                this.Show();
+                Hide();
+                using (FormPrincipal formPrincipal = new FormPrincipal(utilizador))
+                {
+                    formPrincipal.ShowDialog();
+                }
+                Show();
             }
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Erro ao efetuar login.");
+                MessageBox.Show("Erro ao efetuar login: " + ex.Message);
             }
         }
 
-
         private void btnRegistar_Click(object sender, EventArgs e)
         {
-            FormRegistar formRegistar = new FormRegistar();
-
-            this.Hide();
-            formRegistar.ShowDialog();
-            this.Show();
-
+            Hide();
+            using (FormRegistar formRegistar = new FormRegistar())
+            {
+                formRegistar.ShowDialog();
+            }
+            Show();
         }
-
-       
     }
 }
-
-       
-       
-        
-    
-

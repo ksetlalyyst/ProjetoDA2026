@@ -1,17 +1,10 @@
-﻿using iShoppingKelly.Controllers;
+using iShoppingKelly.Controllers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
 {
-    public partial class FormRegistar : System.Windows.Forms.Form
+    public partial class FormRegistar : Form
     {
         public FormRegistar()
         {
@@ -26,58 +19,58 @@ namespace iShoppingKelly.Views
 
         private void btnRegistar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtNome.Text))
+            string nome = txtNome.Text.Trim();
+            string username = txtUser.Text.Trim();
+            string password = txtPassword.Text;
+            string confirmacao = txtConfirm.Text;
+
+            if (string.IsNullOrWhiteSpace(nome))
             {
                 MessageBox.Show("Preencha o nome.");
                 return;
             }
 
-            if (string.IsNullOrEmpty(txtUser.Text))
+            if (string.IsNullOrWhiteSpace(username))
             {
                 MessageBox.Show("Preencha o username.");
                 return;
             }
 
-            if (string.IsNullOrEmpty(txtPassword.Text))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Preencha a password.");
                 return;
             }
 
-            if (txtPassword.Text != txtConfirm.Text)
+            if (password != confirmacao)
             {
                 MessageBox.Show("As passwords não coincidem.");
                 return;
             }
 
-            UtilizadorController controller = new UtilizadorController();
-
             try
             {
-                controller.Registar(
-                    txtNome.Text,
-                    txtUser.Text,
-                    txtPassword.Text
-                    );
+                UtilizadorController utilizadorController = new UtilizadorController();
 
+                if (utilizadorController.UsernameExists(username))
+                {
+                    MessageBox.Show("Username já existe.");
+                    return;
+                }
+
+                utilizadorController.Registar(nome, username, password);
                 MessageBox.Show("Utilizador registado com sucesso.");
-
-                this.Close();
+                Close();
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Erro ao registar o utilizador.");
+                MessageBox.Show("Erro ao registar o utilizador: " + ex.Message);
             }
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
-
 }

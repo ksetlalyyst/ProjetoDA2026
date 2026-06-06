@@ -2,6 +2,7 @@
 using iShoppingKelly.Models;
 using iShoppingKelly.Controllers;
 using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,22 @@ namespace iShoppingKelly.Controllers
 {
     public class ItemCompraController
     {
-            public void AdicionarItem(int compraId, int artigoId, decimal quantidadePrevista, int utilizadorId)
+        public List<ItemCompra> ListarPorCompra(int compraId)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                return context.ItensCompra
+                    .Include(i => i.Artigo)
+                    .Where(i => i.CompraId == compraId)
+                    .ToList();
+            }
+        }
+
+        public void AdicionarItemPrevisto(
+            int compraId,
+            int artigoId,
+            int quantidade,
+            int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
@@ -19,9 +35,12 @@ namespace iShoppingKelly.Controllers
 
                 item.CompraId = compraId;
                 item.ArtigoId = artigoId;
-                item.QuantidadePrevista = quantidadePrevista;
+
+                item.Previsto = true;
+
+                item.QuantidadePrevista = quantidade;
+
                 item.CriadoPorId = utilizadorId;
-                
 
                 context.ItensCompra.Add(item);
 
@@ -29,60 +48,109 @@ namespace iShoppingKelly.Controllers
             }
         }
 
-        public void EliminarItem(int id)
+        public void AdicionarItemNaoPrevisto(
+            int compraId,
+            int artigoId,
+            int quantidade,
+            decimal precoUnitario,
+            string observacoes,
+            int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                ItemCompra item = context.ItensCompra.FirstOrDefault(i => i.Id == id);
+                ItemCompra item = new ItemCompra();
 
-                if (item == null)
-                {
-                    throw new InvalidOperationException("ItemCompra não encontrado.");
-                }
+                item.CompraId = compraId;
+                item.ArtigoId = artigoId;
 
-                context.ItensCompra.Remove(item);
+                item.Previsto = false;
+
+                item.Adquirido = true;
+
+                item.QuantidadeAdquirida = quantidade;
+                item.PrecoUnitario = precoUnitario;
+                item.Observacoes = observacoes;
+
+                item.CriadoPorId = utilizadorId;
+
+                context.ItensCompra.Add(item);
+
                 context.SaveChanges();
             }
         }
 
-        public void EditarItem(int id,decimal quantidadePrevista,int utilizadorId)
+        public void AtualizarQuantidadeAdquirida(
+            int itemId,
+            int quantidade,
+            decimal precoUnitario,
+            int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                ItemCompra item =context.ItensCompra.FirstOrDefault(i => i.Id == id);
-
-                if (item == null)
-                {
-                    throw new InvalidOperationException("Item não encontrado.");
-                }
-
-                item.QuantidadePrevista = quantidadePrevista;
-                item.AlteradoPorId = utilizadorId;
-                item.DataAlteracao = DateTime.Now;
-
-                context.SaveChanges();
-            }
-        }
-
-        public void MarcarAdquirido(int itemId, decimal quantidadeAdquirida, decimal precoUnitario, int utilizadorId)
-        {
-            using (AppDbContext context = new AppDbContext())
-            {
-                ItemCompra item = context.ItensCompra
+                ItemCompra item =
+                    context.ItensCompra
                     .FirstOrDefault(i => i.Id == itemId);
 
-                if (item == null)
+                if (item != null)
                 {
-                    throw new InvalidOperationException("Item não encontrado.");
+                    item.QuantidadeAdquirida = quantidade;
+
+                    item.PrecoUnitario = precoUnitario;
+
+                    item.Adquirido = true;
+
+                    item.AlteradoPorId = utilizadorId;
+                    item.DataAlteracao = DateTime.Now;
+
+                    context.SaveChanges();
                 }
+            }
+        }
 
-                item.QuantidadeAdquirida = quantidadeAdquirida;
-                item.PrecoUnitario = precoUnitario;
-                item.Adquirido = true;
-                item.AlteradoPorId = utilizadorId;
-                item.DataAlteracao = DateTime.Now;
+        public void AtualizarItemPrevisto(
+            int itemId,
+            int artigoId,
+            int quantidadePrevista,
+            int utilizadorId)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                ItemCompra item =
+                    context.ItensCompra
+                    .FirstOrDefault(i => i.Id == itemId);
 
-                context.SaveChanges();
+                if (item != null)
+                {
+                    item.ArtigoId = artigoId;
+
+                    item.QuantidadePrevista =
+                        quantidadePrevista;
+
+                    item.AlteradoPorId =
+                        utilizadorId;
+
+                    item.DataAlteracao =
+                        DateTime.Now;
+
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                ItemCompra item =
+                    context.ItensCompra
+                    .FirstOrDefault(i => i.Id == id);
+
+                if (item != null)
+                {
+                    context.ItensCompra.Remove(item);
+
+                    context.SaveChanges();
+                }
             }
         }
     }

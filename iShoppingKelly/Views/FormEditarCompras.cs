@@ -1,14 +1,8 @@
-﻿using iShoppingKelly.Controllers;
-using iShoppingKelly.Data;
+using iShoppingKelly.Controllers;
 using iShoppingKelly.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iShoppingKelly.Views
@@ -16,7 +10,8 @@ namespace iShoppingKelly.Views
     public partial class FormEditarCompras : Form
     {
         private Compra compraAtual;
-        private Utilizador utilizadorAtual;
+        private readonly Utilizador utilizadorAtual;
+
         public FormEditarCompras(Compra compra, Utilizador utilizador)
         {
             InitializeComponent();
@@ -28,42 +23,71 @@ namespace iShoppingKelly.Views
         {
             txtNomeCom.Text = compraAtual.Nome;
             CarregarTipos();
-
             AtualizarItens();
+        }
+
+        private void CarregarTipos()
+        {
+            TipoArtigoController tipoArtigoController = new TipoArtigoController();
+
+            cBoxTipo.DataSource = tipoArtigoController.ListarTodos();
+            cBoxTipo.DisplayMember = "Nome";
+            cBoxTipo.ValueMember = "Id";
+        }
+
+        private void CarregarArtigos(int tipoId)
+        {
+            ArtigoController artigoController = new ArtigoController();
+
+            cBoxArtigo.DataSource = artigoController.ListarPorTipo(tipoId);
+            cBoxArtigo.DisplayMember = "Nome";
+            cBoxArtigo.ValueMember = "Id";
         }
 
         private void AtualizarItens()
         {
-            dataGridView7.DataSource = null;
+            ItemCompraController itemCompraController = new ItemCompraController();
 
-            using (AppDbContext context = new AppDbContext())
-            {
-                dataGridView7.DataSource = context.ItensCompra
-                    .Where(i => i.CompraId == compraAtual.Id)
-                    .Select(i => new
-                    {
-                        i.Id,
-                        Artigo = i.Artigo.Nome,
-                        i.QuantidadePrevista,
-                        i.PrecoUnitario,
-                        i.Adquirido
-                    })
-                    .ToList();
-            }
+            dataGridView7.DataSource = itemCompraController.ListarPorCompra(compraAtual.Id)
+                .Select(i => new
+                {
+                    i.Id,
+                    Artigo = i.Artigo == null ? "" : i.Artigo.Nome,
+                    i.QuantidadePrevista,
+                    i.Adquirido,
+                    i.QuantidadeAdquirida,
+                    i.PrecoUnitario
+                })
+                .ToList();
         }
 
         private void btnGuardarNome_Click(object sender, EventArgs e)
         {
-            CompraController controller = new CompraController();
+            string nome = txtNomeCom.Text.Trim();
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                MessageBox.Show("Preencha o nome da compra.");
+                return;
+            }
 
-            controller.EditarCompra(compraAtual.Id, txtNomeCom.Text);
+            try
+            {
+                CompraController compraController = new CompraController();
 
-            MessageBox.Show("Nome Atualizado.");
+                compraController.Atualizar(compraAtual.Id, nome);
+                compraAtual = compraController.ObterPorId(compraAtual.Id);
+                MessageBox.Show("Nome atualizado.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar compra: " + ex.Message);
+            }
         }
 
         private void btnAdicItem_Click(object sender, EventArgs e)
         {
             Artigo artigo = cBoxArtigo.SelectedItem as Artigo;
+            int quantidade;
 
             if (artigo == null)
             {
@@ -71,113 +95,100 @@ namespace iShoppingKelly.Views
                 return;
             }
 
-            decimal quantidade;
-            
-            if (!decimal.TryParse(txtQuantidade.Text, out quantidade))
+            if (!int.TryParse(txtQuantidade.Text, out quantidade) || quantidade <= 0)
             {
-                MessageBox.Show("Quantidade invalida.");
+                MessageBox.Show("Introduza uma quantidade prevista válida.");
                 return;
             }
 
-            ItemCompraController controller = new ItemCompraController();
-
-            controller.AdicionarItem(
-                compraAtual.Id,
-                artigo.Id,
-                quantidade,
-                utilizadorAtual.Id);
-
-            AtualizarItens();
-
-            txtQuantidade.Clear();
-        }
-
-        private void CarregarArtigos(int tipoId)
-        {
-            using (AppDbContext context = new AppDbContext())
+            try
             {
-                cBoxArtigo.DataSource =
-                    context.Artigos
-                        .Where(a => a.TipoArtigoId == tipoId)
-                        .ToList();
+                ItemCompraController itemCompraController = new ItemCompraController();
+
+                itemCompraController.AdicionarItemPrevisto(compraAtual.Id, artigo.Id, quantidade, utilizadorAtual.Id);
+                txtQuantidade.Clear();
+                AtualizarItens();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao adicionar item: " + ex.Message);
             }
         }
 
-        private void CarregarTipos()
+        private void btnEditItem_Click(object sender, EventArgs e)
         {
-            cBoxArtigo.DataSource = null;
-
-            using (AppDbContext context = new AppDbContext())
+            int id;
+            if (!TryGetSelectedId(out id))
             {
-                cBoxArtigo.DataSource = context.TiposArtigo.ToList();
-            }
-        }
-
-        private void cBoxTipo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            TipoArtigo tipo =
-                cBoxArtigo.SelectedItem as TipoArtigo;
-
-            if (tipo == null)
-            {
+                MessageBox.Show("Selecione um item.");
                 return;
             }
 
-            using (AppDbContext context =
-                new AppDbContext())
+            Artigo artigo = cBoxArtigo.SelectedItem as Artigo;
+            int quantidade;
+
+            if (artigo == null)
             {
-                cBoxArtigo.DataSource =
-                    context.Artigos
-                    .Where(a => a.TipoArtigoId == tipo.Id)
-                    .ToList();
+                MessageBox.Show("Selecione um artigo.");
+                return;
+            }
+
+            if (!int.TryParse(txtQuantidade.Text, out quantidade) || quantidade <= 0)
+            {
+                MessageBox.Show("Introduza uma quantidade prevista válida.");
+                return;
+            }
+
+            try
+            {
+                ItemCompraController itemCompraController = new ItemCompraController();
+
+                itemCompraController.AtualizarItemPrevisto(id, artigo.Id, quantidade, utilizadorAtual.Id);
+                AtualizarItens();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar item: " + ex.Message);
             }
         }
 
         private void btnElimItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView7.CurrentRow == null)
+            int id;
+            if (!TryGetSelectedId(out id))
             {
                 MessageBox.Show("Selecione um item.");
                 return;
             }
 
-            int id = (int)dataGridView7.CurrentRow
-                .Cells["Id"].Value;
+            if (MessageBox.Show("Remover este item?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
 
-            ItemCompraController controller = new ItemCompraController();
+            try
+            {
+                ItemCompraController itemCompraController = new ItemCompraController();
 
-            controller.EliminarItem(id);
-
-            AtualizarItens();
+                itemCompraController.Eliminar(id);
+                AtualizarItens();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao remover item: " + ex.Message);
+            }
         }
 
-        private void btnEditItem_Click(object sender, EventArgs e)
+        private void cBoxTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (dataGridView7.CurrentRow == null)
+            TipoArtigo tipo = cBoxTipo.SelectedItem as TipoArtigo;
+            if (tipo == null)
             {
-                MessageBox.Show("Selecione um item.");
+                cBoxArtigo.DataSource = null;
                 return;
             }
 
-            decimal quantidade;
-
-            if (!decimal.TryParse(txtQuantidade.Text, out quantidade))
-            {
-                MessageBox.Show("Quantidade inválida.");
-                return;
-            }
-
-            int id = (int)dataGridView7.CurrentRow
-                .Cells["Id"].Value;
-
-            ItemCompraController controller = new ItemCompraController();
-
-            controller.EditarItem(
-                id,
-                quantidade,
-                utilizadorAtual.Id);
-
-            AtualizarItens();
+            CarregarArtigos(tipo.Id);
         }
 
         private void dataGridView7_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -187,10 +198,15 @@ namespace iShoppingKelly.Views
                 return;
             }
 
-            txtQuantidade.Text = dataGridView7.CurrentRow
-                .Cells["QuantidadePrevista"]
-                .Value
-                .ToString();
+            txtQuantidade.Text = Convert.ToString(dataGridView7.CurrentRow.Cells["QuantidadePrevista"].Value);
+        }
+
+        private bool TryGetSelectedId(out int id)
+        {
+            id = 0;
+            return dataGridView7.CurrentRow != null
+                && dataGridView7.Columns.Contains("Id")
+                && int.TryParse(Convert.ToString(dataGridView7.CurrentRow.Cells["Id"].Value), out id);
         }
     }
 }

@@ -9,3 +9,189 @@ associados, nem um Artigo usado em listas, nem um Utilizador com listas criadas.
 listas do mês, não apenas a lista atual.
 5. Sugestão de orçamento com margem de segurança — a sugestão é calculada com média dos meses 
 anteriores + 10% de buffer.
+
+Olhando para o enunciado e para tudo o que já desenvolveste, eu faria esta checklist:
+
+# Já concluído
+
+```text
+✓ Login
+
+✓ Registo de Utilizadores
+
+✓ FormPrincipal
+
+✓ Gestão TiposArtigo (CRUD)
+
+✓ Gestão Artigos (CRUD)
+
+✓ Gestão Orçamentos (CRUD)
+
+✓ PlaneamentoCompras
+
+✓ Criação de Compras
+
+✓ Edição de Compras
+
+✓ Adição de Itens à Compra
+
+✓ Eliminação de Itens
+
+✓ ModoCompra (estrutura)
+
+✓ Marcar Item como Adquirido
+
+✓ Fechar Compra
+```
+
+---
+
+# Ainda falta no FormModoCompra
+
+## 1. Orçamento disponível
+
+Tens os labels:
+
+```text
+lblResulOrc
+lblResulTotalGasto
+lblResDispo
+```
+
+Mas falta calcular:
+
+```text
+Orçamento do mês atual
+Total gasto
+Disponível
+```
+
+Requisito 17 e 18. 
+
+---
+
+## 2. Aviso quando ultrapassa orçamento
+
+Se:
+
+```text
+TotalGasto > Orçamento
+```
+
+mostrar:
+
+```csharp
+MessageBox.Show(
+    "Orçamento ultrapassado!");
+```
+
+Requisito 18. 
+
+---
+
+## 3. Item não previsto
+
+Atualmente tens apenas o botão.
+
+Falta implementar:
+
+```text
+Artigo não previsto
+
+Quantidade adquirida
+
+Preço unitário
+
+Observações
+```
+
+Requisitos 15 e 16. 
+
+---
+
+# Estatísticas
+
+É a maior parte do trabalho que ainda falta.
+
+---
+
+## Estatística A
+
+Listar:
+
+```text
+Mês
+Orçamento
+Total Compras
+Diferença
+```
+
+Requisito 21a. 
+
+---
+
+## Estatística B
+
+Para cada compra fechada:
+
+```text
+% artigos previstos
+
+% artigos não previstos
+```
+
+Requisito 21b. 
+
+---
+
+## Estatística C
+
+Sugestão de orçamento:
+
+```text
+Média dos meses anteriores
+```
+
+Requisito 21c. 
+
+---
+
+## Estatística D
+
+Sugestão de lista de compras:
+
+```text
+Semana atual
+
+Comparar com compras da mesma semana
+dos meses anteriores
+```
+
+Requisito 21c. 
+
+---
+
+# Exportação CSV
+
+Ainda não está feita.
+
+Requisito 20. 
+
+Campos:
+
+```text
+NomeCompra
+DataCriacao
+DataFechada
+NomeArtigo
+ArtigoPrevisto
+ArtigoNaoPrevisto
+QuantidadePrevista
+QuantidadeAdquirida
+PrecoUnitario
+```
+
+
+
+
+Porque vale 15% da avaliação e é a maior funcionalidade que ainda falta.
