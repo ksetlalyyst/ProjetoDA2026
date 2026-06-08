@@ -29,6 +29,6 @@ namespace iShoppingKelly.Models
         public Utilizador AlteradoPor { get; set; }
 
         public DateTime DataCriacao { get; set; } = DateTime.Now;
-        public DateTime? DataAlteracao { get; set; }
+        public DateTime DataAlteracao { get; set; }
     }
 }

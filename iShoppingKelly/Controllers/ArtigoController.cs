@@ -9,87 +9,93 @@ namespace iShoppingKelly.Controllers
 {
     public class ArtigoController
     {
-            public List<Artigo> ListarTodos()
+        //Lista todos os artigos ordenados por nome, incluindo o tipo de artigo
+        public List<Artigo> ListarTodos()
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                using (AppDbContext context = new AppDbContext())
-                {
-                    return context.Artigos
-                        .Include(a => a.TipoArtigo)
-                        .OrderBy(a => a.Nome)
-                        .ToList();
-                }
+                return context.Artigos
+                    .Include(a => a.TipoArtigo)
+                    .OrderBy(a => a.Nome)
+                    .ToList();
             }
+        }
 
-            public List<Artigo> ListarPorTipo(int tipoArtigoId)
+        //Lista os artigos filtrados por tipo, ordenados por nome
+        public List<Artigo> ListarPorTipo(int tipoArtigoId)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                using (AppDbContext context = new AppDbContext())
-                {
-                    return context.Artigos
-                        .Include(a => a.TipoArtigo)
-                        .Where(a => a.TipoArtigoId == tipoArtigoId)
-                        .OrderBy(a => a.Nome)
-                        .ToList();
-                }
+                return context.Artigos
+                    .Include(a => a.TipoArtigo)
+                    .Where(a => a.TipoArtigoId == tipoArtigoId)
+                    .OrderBy(a => a.Nome)
+                    .ToList();
             }
+        }
 
-            public Artigo ObterPorId(int id)
+        //Obtém um artigo pelo seu ID
+        public Artigo ObterPorId(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                using (AppDbContext context = new AppDbContext())
-                {
-                    return context.Artigos
-                        .Include(a => a.TipoArtigo)
-                        .FirstOrDefault(a => a.Id == id);
-                }
+                return context.Artigos
+                    .Include(a => a.TipoArtigo)
+                    .FirstOrDefault(a => a.Id == id);
             }
+        }
 
-            public void Criar(string nome, int tipoArtigoId)
+        //Cria um novo artigo com nome e tipo
+        public void Criar(string nome, int tipoArtigoId)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                using (AppDbContext context = new AppDbContext())
-                {
-                    Artigo artigo = new Artigo();
+                Artigo artigo = new Artigo();
 
+                artigo.Nome = nome;
+                artigo.TipoArtigoId = tipoArtigoId;
+
+                context.Artigos.Add(artigo);
+
+                context.SaveChanges();
+            }
+        }
+
+        //Atualiza o nome e tipo de um artigo existente
+        public void Atualizar(int id, string nome, int tipoArtigoId)
+        {
+            using (AppDbContext context = new AppDbContext())
+            {
+                Artigo artigo =
+                    context.Artigos
+                    .FirstOrDefault(a => a.Id == id);
+
+                if (artigo != null)
+                {
                     artigo.Nome = nome;
                     artigo.TipoArtigoId = tipoArtigoId;
-
-                    context.Artigos.Add(artigo);
 
                     context.SaveChanges();
                 }
             }
+        }
 
-            public void Atualizar(int id, string nome, int tipoArtigoId)
+        //Elimina um artigo pelo seu ID
+        public void Eliminar(int id)
+        {
+            using (AppDbContext context = new AppDbContext())
             {
-                using (AppDbContext context = new AppDbContext())
+                Artigo artigo =
+                    context.Artigos
+                    .FirstOrDefault(a => a.Id == id);
+
+                if (artigo != null)
                 {
-                    Artigo artigo =
-                        context.Artigos
-                        .FirstOrDefault(a => a.Id == id);
+                    context.Artigos.Remove(artigo);
 
-                    if (artigo != null)
-                    {
-                        artigo.Nome = nome;
-                        artigo.TipoArtigoId = tipoArtigoId;
-
-                        context.SaveChanges();
-                    }
-                }
-            }
-
-            public void Eliminar(int id)
-            {
-                using (AppDbContext context = new AppDbContext())
-                {
-                    Artigo artigo =
-                        context.Artigos
-                        .FirstOrDefault(a => a.Id == id);
-
-                    if (artigo != null)
-                    {
-                        context.Artigos.Remove(artigo);
-
-                        context.SaveChanges();
-                    }
+                    context.SaveChanges();
                 }
             }
         }
     }
+}

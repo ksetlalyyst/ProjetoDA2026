@@ -16,6 +16,7 @@ namespace iShoppingKelly.Views
             utilizadorAtual = utilizador;
         }
 
+        //Carrega os meses, anos e lista de orçamentos ao iniciar
         private void FormOrcamentos_Load(object sender, EventArgs e)
         {
             CarregarMeses();
@@ -23,6 +24,7 @@ namespace iShoppingKelly.Views
             AtualizarOrcamentos();
         }
 
+        //Preenche o combobox com os nomes dos meses
         private void CarregarMeses()
         {
             comboMes.Items.Clear();
@@ -50,6 +52,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Preenche o combobox com anos (2018 até 10 anos no futuro)
         private void CarregarAnos()
         {
             comboAno.Items.Clear();
@@ -60,6 +63,7 @@ namespace iShoppingKelly.Views
             comboAno.SelectedItem = DateTime.Now.Year;
         }
 
+        //Atualiza a grelha com todos os orçamentos
         private void AtualizarOrcamentos()
         {
             OrcamentoController orcamentoController = new OrcamentoController();
@@ -75,6 +79,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Cria um novo orçamento (valida se já existe para o mesmo mês/ano)
         private void btnNovoOrc_Click(object sender, EventArgs e)
         {
             int mes;
@@ -90,6 +95,7 @@ namespace iShoppingKelly.Views
             {
                 OrcamentoController orcamentoController = new OrcamentoController();
 
+                //Verifica se já existe orçamento para o mês/ano (requisito 8 - único mensal)
                 Orcamento existente = orcamentoController.ObterOrcamentoDoMes(mes, ano);
                 if (existente != null)
                 {
@@ -107,6 +113,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Edita o orçamento selecionado
         private void btnEditarOrc_Click(object sender, EventArgs e)
         {
             int id;
@@ -137,6 +144,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Elimina o orçamento selecionado (com confirmação)
         private void btnEliminarOrc_Click(object sender, EventArgs e)
         {
             int id;
@@ -165,6 +173,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Preenche os campos com os dados do orçamento selecionado na grelha
         private void dataGridView5_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView5.CurrentRow == null)
@@ -182,6 +191,7 @@ namespace iShoppingKelly.Views
             txtValor.Text = Convert.ToString(dataGridView5.CurrentRow.Cells["Valor"].Value);
         }
 
+        //Lê e valida os dados preenchidos nos campos (mês, ano, valor)
         private bool TryLerDados(out int mes, out int ano, out decimal valor)
         {
             mes = 0;
@@ -212,6 +222,7 @@ namespace iShoppingKelly.Views
             return true;
         }
 
+        //Seleciona um mês específico no combobox
         private void SelecionarMes(int mes)
         {
             foreach (MesItem item in comboMes.Items)
@@ -224,6 +235,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Obtém o ID do orçamento selecionado na grelha
         private bool TryGetSelectedId(out int id)
         {
             id = 0;
@@ -232,6 +244,7 @@ namespace iShoppingKelly.Views
                 && int.TryParse(Convert.ToString(dataGridView5.CurrentRow.Cells["Id"].Value), out id);
         }
 
+        //Classe auxiliar para representar um mês no combobox
         private class MesItem
         {
             public MesItem(int numero, string nome)

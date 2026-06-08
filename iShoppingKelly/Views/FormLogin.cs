@@ -12,16 +12,19 @@ namespace iShoppingKelly.Views
             InitializeComponent();
         }
 
+        //Define a máscara da password com '*' ao carregar o formulário
         private void FormLogin_Load(object sender, EventArgs e)
         {
             txtPassword.PasswordChar = '*';
         }
 
+        //Autentica o utilizador com username/password e abre o FormPrincipal
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             string username = txtUser.Text.Trim();
             string password = txtPassword.Text;
 
+            //Validação dos campos
             if (string.IsNullOrWhiteSpace(username))
             {
                 MessageBox.Show("Preencha o username.");
@@ -36,10 +39,12 @@ namespace iShoppingKelly.Views
 
             try
             {
+                //Tenta autenticar
                 UtilizadorController utilizadorController = new UtilizadorController();
 
                 Utilizador utilizador = utilizadorController.Login(username, password);
 
+                //Abre o formulário principal e esconde o login
                 Hide();
                 using (FormPrincipal formPrincipal = new FormPrincipal(utilizador))
                 {
@@ -57,6 +62,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Abre o formulário de registo de novo utilizador
         private void btnRegistar_Click(object sender, EventArgs e)
         {
             Hide();

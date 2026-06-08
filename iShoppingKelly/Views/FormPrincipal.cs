@@ -16,43 +16,51 @@ namespace iShoppingKelly.Views
             utilizadorAtual = utilizador;
         }
 
+        //Apresenta a mensagem de boas-vindas e carrega as compras em aberto
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
             lblBemVinda.Text = "Bem-vinda(o) " + (string.IsNullOrWhiteSpace(utilizadorAtual.Nome) ? utilizadorAtual.Username : utilizadorAtual.Nome) + "!";
             AtualizarCompras();
         }
 
+        //Menu: Sair - fecha a aplicação
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        //Menu: Gestão > Artigos
         private void artigostool_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormArtigo());
         }
 
+        //Menu: Gestão > Tipos de Artigo
         private void tiposDeArtigoTool_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormTiposArtigo());
         }
 
+        //Menu: Gestão > Orçamentos
         private void orcamentosTool_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormOrcamentos(utilizadorAtual));
         }
 
+        //Menu: Compras > Planeamento Compras
         private void planeamentoComprasTool_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormPlaneamentoCompras(utilizadorAtual));
             AtualizarCompras();
         }
 
+        //Menu: Relatórios > Estatísticas
         private void estatísticasTool_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormEstatísticas(utilizadorAtual));
         }
 
+        //Abre o Modo Compra para a compra selecionada na grelha
         private void btnModoCompra_Click(object sender, EventArgs e)
         {
             int id;
@@ -75,11 +83,13 @@ namespace iShoppingKelly.Views
             AtualizarCompras();
         }
 
+        //Atualiza a lista de compras em aberto
         private void btnAtualizar_Click(object sender, EventArgs e)
         {
             AtualizarCompras();
         }
 
+        //Carrega as compras que ainda estão abertas (não fechadas)
         private void AtualizarCompras()
         {
             CompraController compraController = new CompraController();
@@ -98,6 +108,7 @@ namespace iShoppingKelly.Views
         {
         }
 
+        //Abre um formulário filho, escondendo o formulário atual
         private void AbrirForm(Form form)
         {
             Hide();
@@ -108,6 +119,7 @@ namespace iShoppingKelly.Views
             Show();
         }
 
+        //Obtém o ID selecionado na primeira coluna da DataGridView
         private bool TryGetSelectedId(out int id)
         {
             id = 0;
@@ -116,6 +128,7 @@ namespace iShoppingKelly.Views
                 && int.TryParse(Convert.ToString(dataGridView1.CurrentRow.Cells["Id"].Value), out id);
         }
 
+        //Menu: Gestão > Utilizadores
         private void utilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirForm(new FormUtilizadores(utilizadorAtual));

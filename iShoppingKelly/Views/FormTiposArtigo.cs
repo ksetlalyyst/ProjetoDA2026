@@ -13,11 +13,13 @@ namespace iShoppingKelly.Views
             InitializeComponent();
         }
 
+        //Carrega a lista de tipos de artigo ao iniciar
         private void FormTiposArtigo_Load(object sender, EventArgs e)
         {
             AtualizarTipos();
         }
 
+        //Atualiza a grelha com todos os tipos de artigo
         private void AtualizarTipos()
         {
             TipoArtigoController tipoArtigoController = new TipoArtigoController();
@@ -31,6 +33,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Cria um novo tipo de artigo
         private void btnNovoTipo_Click(object sender, EventArgs e)
         {
             string nome = txtNomeTipoArt.Text.Trim();
@@ -55,6 +58,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Edita o tipo de artigo selecionado
         private void btnEditarTipo_Click(object sender, EventArgs e)
         {
             int id;
@@ -85,6 +89,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Elimina o tipo de artigo selecionado (com confirmação)
         private void btnEliminarTipo_Click(object sender, EventArgs e)
         {
             int id;
@@ -113,6 +118,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Preenche o campo de nome com o tipo selecionado na grelha
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView3.CurrentRow == null || !dataGridView3.Columns.Contains("Nome"))
@@ -123,6 +129,7 @@ namespace iShoppingKelly.Views
             txtNomeTipoArt.Text = Convert.ToString(dataGridView3.CurrentRow.Cells["Nome"].Value);
         }
 
+        //Tenta obter o ID do item selecionado numa DataGridView
         private static bool TryGetSelectedId(DataGridView dataGridView, out int id)
         {
             id = 0;

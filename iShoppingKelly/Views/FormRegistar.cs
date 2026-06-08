@@ -11,12 +11,14 @@ namespace iShoppingKelly.Views
             InitializeComponent();
         }
 
+        //Define a máscara das passwords com '*' ao carregar o formulário
         private void FormRegistar_Load(object sender, EventArgs e)
         {
             txtPassword.PasswordChar = '*';
             txtConfirm.PasswordChar = '*';
         }
 
+        //Regista um novo utilizador após validar os campos
         private void btnRegistar_Click(object sender, EventArgs e)
         {
             string nome = txtNome.Text.Trim();
@@ -24,6 +26,7 @@ namespace iShoppingKelly.Views
             string password = txtPassword.Text;
             string confirmacao = txtConfirm.Text;
 
+            //Validações obrigatórias
             if (string.IsNullOrWhiteSpace(nome))
             {
                 MessageBox.Show("Preencha o nome.");
@@ -42,6 +45,7 @@ namespace iShoppingKelly.Views
                 return;
             }
 
+            //Confirma que as passwords coincidem
             if (password != confirmacao)
             {
                 MessageBox.Show("As passwords não coincidem.");
@@ -52,12 +56,14 @@ namespace iShoppingKelly.Views
             {
                 UtilizadorController utilizadorController = new UtilizadorController();
 
+                //Verifica se o username já existe
                 if (utilizadorController.UsernameExists(username))
                 {
                     MessageBox.Show("Username já existe.");
                     return;
                 }
 
+                //Regista o novo utilizador
                 utilizadorController.Registar(nome, username, password);
                 MessageBox.Show("Utilizador registado com sucesso.");
                 Close();
@@ -68,6 +74,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Fecha o formulário de registo
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             Close();

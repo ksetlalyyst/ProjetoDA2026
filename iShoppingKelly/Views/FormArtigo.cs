@@ -14,17 +14,20 @@ namespace iShoppingKelly.Views
             InitializeComponent();
         }
 
+        //Carrega os tipos de artigo e a lista de artigos ao iniciar
         private void FormArtigo_Load(object sender, EventArgs e)
         {
             CarregarTipos();
             AtualizarArtigos();
         }
 
+        //Carrega o combobox com os tipos de artigo para filtrar (inclui "Todos")
         private void CarregarTipos()
         {
             TipoArtigoController tipoArtigoController = new TipoArtigoController();
             List<TipoArtigo> tipos = tipoArtigoController.ListarTodos();
 
+            //Adiciona a opção "Todos" no início da lista
             TipoArtigo todos = new TipoArtigo();
             todos.Id = 0;
             todos.Nome = "Todos";
@@ -36,10 +39,13 @@ namespace iShoppingKelly.Views
             comboBoxFiltrarTipo.ValueMember = "Id";
         }
 
+        //Atualiza a grelha de artigos conforme o filtro de tipo selecionado
         private void AtualizarArtigos()
         {
             ArtigoController artigoController = new ArtigoController();
             TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
+
+            //Se "Todos" (Id=0) lista todos, senão filtra por tipo
             List<Artigo> artigos = tipo == null || tipo.Id == 0
                 ? artigoController.ListarTodos()
                 : artigoController.ListarPorTipo(tipo.Id);
@@ -54,6 +60,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Quando o filtro de tipo muda, atualiza a lista de artigos
         private void comboBoxFiltrarTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
             AtualizarArtigos();
@@ -63,6 +70,7 @@ namespace iShoppingKelly.Views
         {
         }
 
+        //Cria um novo artigo com os dados preenchidos
         private void btnNovoArtigo_Click(object sender, EventArgs e)
         {
             TipoArtigo tipo = comboBoxFiltrarTipo.SelectedItem as TipoArtigo;
@@ -94,6 +102,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Edita o artigo selecionado com os novos dados
         private void btnEditarArtigo_Click(object sender, EventArgs e)
         {
             int id;
@@ -132,6 +141,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Elimina o artigo selecionado (com confirmação)
         private void btnEliminarArtigo_Click(object sender, EventArgs e)
         {
             int id;
@@ -160,6 +170,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Preenche o campo de nome com o artigo selecionado na grelha
         private void dataGridView4_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView4.CurrentRow == null || !dataGridView4.Columns.Contains("Nome"))
@@ -170,6 +181,7 @@ namespace iShoppingKelly.Views
             txtArtigoNome.Text = Convert.ToString(dataGridView4.CurrentRow.Cells["Nome"].Value);
         }
 
+        //Tenta obter o ID do item selecionado numa DataGridView
         private static bool TryGetSelectedId(DataGridView dataGridView, out int id)
         {
             id = 0;

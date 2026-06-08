@@ -37,8 +37,29 @@
             this.lblNomeTipoArt = new System.Windows.Forms.Label();
             this.txtNomeCompra = new System.Windows.Forms.TextBox();
             this.lblNomeCompra = new System.Windows.Forms.Label();
+            this.comboFiltroEstado = new System.Windows.Forms.ComboBox();
+            this.lblFiltroEstado = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.SuspendLayout();
+            // 
+            // comboFiltroEstado
+            // 
+            this.comboFiltroEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFiltroEstado.FormattingEnabled = true;
+            this.comboFiltroEstado.Location = new System.Drawing.Point(390, 10);
+            this.comboFiltroEstado.Name = "comboFiltroEstado";
+            this.comboFiltroEstado.Size = new System.Drawing.Size(120, 21);
+            this.comboFiltroEstado.TabIndex = 29;
+            this.comboFiltroEstado.SelectedIndexChanged += new System.EventHandler(this.comboFiltroEstado_SelectedIndexChanged);
+            // 
+            // lblFiltroEstado
+            // 
+            this.lblFiltroEstado.AutoSize = true;
+            this.lblFiltroEstado.Location = new System.Drawing.Point(345, 13);
+            this.lblFiltroEstado.Name = "lblFiltroEstado";
+            this.lblFiltroEstado.Size = new System.Drawing.Size(43, 13);
+            this.lblFiltroEstado.TabIndex = 30;
+            this.lblFiltroEstado.Text = "Estado:";
             // 
             // dataGridView6
             // 
@@ -145,6 +166,8 @@
             this.ClientSize = new System.Drawing.Size(577, 299);
             this.Controls.Add(this.txtNomeCompra);
             this.Controls.Add(this.lblNomeCompra);
+            this.Controls.Add(this.comboFiltroEstado);
+            this.Controls.Add(this.lblFiltroEstado);
             this.Controls.Add(this.txtFiltro);
             this.Controls.Add(this.lblNomeTipoArt);
             this.Controls.Add(this.btnExportar);
@@ -172,5 +195,7 @@
         private System.Windows.Forms.Label lblNomeTipoArt;
         private System.Windows.Forms.TextBox txtNomeCompra;
         private System.Windows.Forms.Label lblNomeCompra;
+        private System.Windows.Forms.ComboBox comboFiltroEstado;
+        private System.Windows.Forms.Label lblFiltroEstado;
     }
 }

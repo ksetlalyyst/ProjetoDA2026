@@ -1,6 +1,7 @@
 ﻿using iShoppingKelly.Data;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace iShoppingKelly.Controllers
 {
     public class EstatisticasController
     {
+        //Obtém estatísticas mensais: orçamento, total gasto e diferença por mês/ano
         public List<object> ObterEstatisticasMensais()
         {
             using (AppDbContext context = new AppDbContext())
@@ -22,6 +24,7 @@ namespace iShoppingKelly.Controllers
                         o.Ano,
                         Orcamento = o.Valor,
 
+                        //Calcula o total gasto em compras fechadas nesse mês/ano
                         TotalGasto = context.ItensCompra
                             .Where(i =>
                                 i.Adquirido &&
@@ -33,6 +36,7 @@ namespace iShoppingKelly.Controllers
                                 (i.QuantidadeAdquirida ?? 0) *
                                 (i.PrecoUnitario ?? 0)),
 
+                        //Diferença entre o orçamento e o total gasto
                         Diferenca =
                             o.Valor -
                             context.ItensCompra
@@ -51,6 +55,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Obtém percentagens de artigos previstos e não previstos por compra fechada
         public List<object> ObterPercentagensCompras()
         {
             using (AppDbContext context = new AppDbContext())
@@ -63,6 +68,7 @@ namespace iShoppingKelly.Controllers
                         c.Nome,
                         c.DataFechada,
 
+                        //Percentagem de artigos previstos na compra
                         PercentagemPrevistos =
                             c.Itens.Count == 0
                                 ? 0
@@ -70,6 +76,7 @@ namespace iShoppingKelly.Controllers
                                     (decimal)c.Itens.Count(i => i.Previsto)
                                     / c.Itens.Count * 100, 2),
 
+                        //Percentagem de artigos não previstos na compra
                         PercentagemNaoPrevistos =
                             c.Itens.Count == 0
                                 ? 0
@@ -82,10 +89,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Sugere um orçamento para o próximo mês baseado na média dos gastos mensais anteriores
         public decimal SugerirOrcamentoProximoMes()
         {
             using (AppDbContext context = new AppDbContext())
             {
+                //Agrupa compras fechadas por mês/ano e calcula a média dos gastos mensais
                 var gastosMensais =
                     context.Compras
                     .Where(c => c.Fechada)
@@ -110,12 +119,33 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Sugere uma lista de compras com base na semana atual do mês (1ª a 4ª)
+        //Considera compras fechadas de meses anteriores na mesma semana
         public List<object> SugerirListaCompras()
         {
             using (AppDbContext context = new AppDbContext())
             {
+                DateTime hoje = DateTime.Now;
+                int dia = hoje.Day;
+                //Calcula a semana atual do mês (1-7 = semana 1, 8-14 = semana 2, etc.)
+                int semanaAtual = (dia - 1) / 7 + 1;
+
+                //Obtém os IDs das compras fechadas de meses anteriores na mesma semana
+                var comprasSemanaAnterior = context.Compras
+                    .Where(c => c.Fechada && c.DataFechada.HasValue)
+                    .ToList()
+                    .Where(c =>
+                    {
+                        DateTime df = c.DataFechada.Value;
+                        int semana = (df.Day - 1) / 7 + 1;
+                        return semana == semanaAtual && df.Month != hoje.Month;
+                    })
+                    .Select(c => c.Id)
+                    .ToList();
+
+                //Agrupa os artigos dessas compras e ordena pelos mais comprados
                 return context.ItensCompra
-                    .Where(i => i.Adquirido)
+                    .Where(i => comprasSemanaAnterior.Contains(i.CompraId) && i.Adquirido)
                     .GroupBy(i => i.Artigo.Nome)
                     .Select(g => new
                     {
@@ -134,12 +164,15 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Exporta as compras fechadas do utilizador para um ficheiro CSV
+        //Formato: NomeCompra;DataCriacao;DataFechada;NomeArtigo;ArtigoPrevisto;ArtigoNaoPrevisto;QuantidadePrevista;QuantidadeAdquirida;PrecoUnitario
         public void ExportarComprasCsv(
             string caminho,
             int utilizadorId)
         {
             using (AppDbContext context = new AppDbContext())
             {
+                //Abre stream para escrita do ficheiro
                 FileStream fs =
                     new FileStream(
                         caminho,
@@ -149,13 +182,18 @@ namespace iShoppingKelly.Controllers
                 StreamWriter sw =
                     new StreamWriter(fs);
 
+                //Escreve o cabeçalho com os nomes das colunas
                 sw.WriteLine(
                     "NomeCompra;DataCriacao;DataFechada;NomeArtigo;ArtigoPrevisto;ArtigoNaoPrevisto;QuantidadePrevista;QuantidadeAdquirida;PrecoUnitario");
 
+                //Obtém os itens de compras fechadas do utilizador atual
                 var itens = context.ItensCompra
-                    .Where(i => i.Compra.Fechada)
+                    .Include(i => i.Compra)
+                    .Include(i => i.Artigo)
+                    .Where(i => i.Compra.Fechada && i.Compra.CriadaPorId == utilizadorId)
                     .ToList();
 
+                //Escreve cada item como uma linha CSV
                 foreach (var item in itens)
                 {
                     sw.WriteLine(

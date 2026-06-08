@@ -18,11 +18,13 @@ namespace iShoppingKelly.Views
             InitializeComponent();
         }
 
+        //Carrega a lista de utilizadores ao iniciar
         private void FormUtilizadores_Load(object sender, EventArgs e)
         {
             AtualizarUtilizadores();
         }
 
+        //Atualiza a grelha com todos os utilizadores
         private void AtualizarUtilizadores()
         {
             UtilizadorController utilizadorController = new UtilizadorController();
@@ -37,6 +39,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Abre o formulário de registo para adicionar um novo utilizador
         private void btnNovoUti_Click(object sender, EventArgs e)
         {
             using (FormRegistar form = new FormRegistar())
@@ -46,6 +49,7 @@ namespace iShoppingKelly.Views
             AtualizarUtilizadores();
         }
 
+        //Edita o utilizador selecionado através de InputBoxes
         private void btnEditUti_Click(object sender, EventArgs e)
         {
             int id;
@@ -64,6 +68,7 @@ namespace iShoppingKelly.Views
                 return;
             }
 
+            //Pede os novos dados ao utilizador
             string nome = Microsoft.VisualBasic.Interaction.InputBox("Nome:", "Editar Utilizador", utilizador.Nome);
             if (string.IsNullOrWhiteSpace(nome))
             {
@@ -80,6 +85,7 @@ namespace iShoppingKelly.Views
 
             try
             {
+                //Verifica se o novo username já existe (se foi alterado)
                 if (!string.Equals(utilizador.Username, username, StringComparison.OrdinalIgnoreCase)
                     && utilizadorController.UsernameExists(username))
                 {
@@ -96,6 +102,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Elimina o utilizador selecionado (com confirmação)
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             int id;
@@ -127,6 +134,7 @@ namespace iShoppingKelly.Views
         {
         }
 
+        //Obtém o ID do utilizador selecionado na grelha
         private bool TryGetSelectedId(out int id)
         {
             id = 0;

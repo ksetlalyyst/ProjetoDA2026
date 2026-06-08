@@ -10,10 +10,12 @@ namespace iShoppingKelly.Controllers
 {
     public class UtilizadorController
     {
+        //Autentica um utilizador com base no username e password
         public Utilizador Login(string username, string password)
         {
             using (AppDbContext context = new AppDbContext())
             {
+                //Procura o utilizador pelo username
                 Utilizador utilizador = context.Utilizadores.FirstOrDefault(u => u.Username == username);
 
                 if (utilizador == null)
@@ -29,13 +31,16 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Verifica se um username já existe na base de dados
         public bool UsernameExists(string username)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                return context.Utilizadores .Any(u => u.Username == username);
+                return context.Utilizadores.Any(u => u.Username == username);
             }
         }
+
+        //Cria um novo utilizador com username e password (sem nome)
         public void Criar(string username, string password)
         {
             using (AppDbContext context = new AppDbContext())
@@ -51,6 +56,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Lista todos os utilizadores da base de dados
         public List<Utilizador> ListarTodos()
         {
             using (AppDbContext context = new AppDbContext())
@@ -59,6 +65,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Obtém um utilizador pelo seu ID
         public Utilizador ObterPorId(int id)
         {
             using (AppDbContext context = new AppDbContext())
@@ -68,12 +75,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Atualiza os dados de um utilizador (recebe objeto Utilizador)
         public void Atualizar(Utilizador utilizador)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                Utilizador existente =
-                    context.Utilizadores
+                Utilizador existente = context.Utilizadores
                     .FirstOrDefault(u => u.Id == utilizador.Id);
 
                 if (existente != null)
@@ -90,12 +97,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Atualiza os dados de um utilizador (recebe parâmetros individuais)
         public void Atualizar(int id, string nome, string username, string password)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                Utilizador existente =
-                    context.Utilizadores
+                Utilizador existente = context.Utilizadores
                     .FirstOrDefault(u => u.Id == id);
 
                 if (existente != null)
@@ -112,10 +119,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Regista um novo utilizador com nome, username e password (valida duplicados)
         public void Registar(string nome, string username, string password)
         {
             using (AppDbContext context = new AppDbContext())
             {
+                //Verifica se o username já está em uso
                 Utilizador utilizadorExistente = context.Utilizadores
                     .FirstOrDefault(u => u.Username == username);
 
@@ -135,12 +144,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Elimina um utilizador da base de dados pelo seu ID
         public void Eliminar(int id)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                Utilizador utilizador =
-                    context.Utilizadores
+                Utilizador utilizador = context.Utilizadores
                     .FirstOrDefault(u => u.Id == id);
 
                 if (utilizador != null)

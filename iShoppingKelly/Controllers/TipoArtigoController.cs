@@ -10,6 +10,7 @@ namespace iShoppingKelly.Controllers
 {
     public class TipoArtigoController
     {
+        //Lista todos os tipos de artigo ordenados por nome
         public List<TipoArtigo> ListarTodos()
         {
             using (AppDbContext context = new AppDbContext())
@@ -20,6 +21,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Obtém um tipo de artigo pelo seu ID
         public TipoArtigo ObterPorId(int id)
         {
             using (AppDbContext context = new AppDbContext())
@@ -29,6 +31,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Cria um novo tipo de artigo
         public void Criar(string nome)
         {
             using (AppDbContext context = new AppDbContext())
@@ -43,12 +46,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Atualiza o nome de um tipo de artigo
         public void Atualizar(int id, string nome)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                TipoArtigo tipoArtigo =
-                    context.TiposArtigo
+                TipoArtigo tipoArtigo = context.TiposArtigo
                     .FirstOrDefault(t => t.Id == id);
 
                 if (tipoArtigo != null)
@@ -60,12 +63,12 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Elimina um tipo de artigo pelo seu ID
         public void Eliminar(int id)
         {
             using (AppDbContext context = new AppDbContext())
             {
-                TipoArtigo tipoArtigo =
-                    context.TiposArtigo
+                TipoArtigo tipoArtigo = context.TiposArtigo
                     .FirstOrDefault(t => t.Id == id);
 
                 if (tipoArtigo != null)

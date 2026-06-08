@@ -19,6 +19,7 @@ namespace iShoppingKelly.Views
             utilizadorAtual = utilizador;
         }
 
+        //Carrega os dados da compra, tipos de artigo e itens ao iniciar
         private void FormEditarCompras_Load(object sender, EventArgs e)
         {
             txtNomeCom.Text = compraAtual.Nome;
@@ -26,6 +27,7 @@ namespace iShoppingKelly.Views
             AtualizarItens();
         }
 
+        //Carrega os tipos de artigo no combobox
         private void CarregarTipos()
         {
             TipoArtigoController tipoArtigoController = new TipoArtigoController();
@@ -35,6 +37,7 @@ namespace iShoppingKelly.Views
             cBoxTipo.ValueMember = "Id";
         }
 
+        //Carrega os artigos de um tipo específico no combobox de artigos
         private void CarregarArtigos(int tipoId)
         {
             ArtigoController artigoController = new ArtigoController();
@@ -44,6 +47,7 @@ namespace iShoppingKelly.Views
             cBoxArtigo.ValueMember = "Id";
         }
 
+        //Atualiza a grelha com os itens da compra atual
         private void AtualizarItens()
         {
             ItemCompraController itemCompraController = new ItemCompraController();
@@ -61,6 +65,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Guarda o novo nome da compra
         private void btnGuardarNome_Click(object sender, EventArgs e)
         {
             string nome = txtNomeCom.Text.Trim();
@@ -84,6 +89,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Adiciona um novo item previsto à compra (requisito 10 e 11)
         private void btnAdicItem_Click(object sender, EventArgs e)
         {
             Artigo artigo = cBoxArtigo.SelectedItem as Artigo;
@@ -115,6 +121,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Edita um item previsto existente
         private void btnEditItem_Click(object sender, EventArgs e)
         {
             int id;
@@ -152,6 +159,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Remove um item da compra (com confirmação)
         private void btnElimItem_Click(object sender, EventArgs e)
         {
             int id;
@@ -179,6 +187,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Quando o tipo muda, carrega os artigos desse tipo (requisito 11)
         private void cBoxTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
             TipoArtigo tipo = cBoxTipo.SelectedItem as TipoArtigo;
@@ -191,6 +200,7 @@ namespace iShoppingKelly.Views
             CarregarArtigos(tipo.Id);
         }
 
+        //Preenche a quantidade com o valor do item selecionado
         private void dataGridView7_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView7.CurrentRow == null)
@@ -201,6 +211,7 @@ namespace iShoppingKelly.Views
             txtQuantidade.Text = Convert.ToString(dataGridView7.CurrentRow.Cells["QuantidadePrevista"].Value);
         }
 
+        //Obtém o ID do item selecionado na grelha
         private bool TryGetSelectedId(out int id)
         {
             id = 0;

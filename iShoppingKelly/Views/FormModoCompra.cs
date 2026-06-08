@@ -10,6 +10,8 @@ namespace iShoppingKelly.Views
     {
         private readonly Compra compraAtual;
         private readonly Utilizador utilizadorAtual;
+        //Controla se o aviso de orçamento ultrapassado já foi mostrado (requisito 18)
+        private bool orcamentoAvisado;
 
         public FormModoCompra(Compra compra, Utilizador utilizador)
         {
@@ -19,12 +21,15 @@ namespace iShoppingKelly.Views
             Inicializar();
         }
 
+        //Configura o formulário: nome da compra, grelha de itens e totais
         private void Inicializar()
         {
             boxCompraSem.Text = compraAtual.Nome;
             AtualizarItens();
             AtualizarTotais();
+            orcamentoAvisado = false;
 
+            //Se a compra já estiver fechada, desativa todas as ações (apenas leitura)
             if (compraAtual.Fechada)
             {
                 btnAdquirido.Enabled = false;
@@ -33,6 +38,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Atualiza a grelha com os itens da compra atual
         private void AtualizarItens()
         {
             ItemCompraController itemCompraController = new ItemCompraController();
@@ -52,6 +58,7 @@ namespace iShoppingKelly.Views
                 .ToList();
         }
 
+        //Calcula e apresenta os totais: orçamento, gasto total e disponível (requisito 17)
         private void AtualizarTotais()
         {
             OrcamentoController orcamentoController = new OrcamentoController();
@@ -68,9 +75,31 @@ namespace iShoppingKelly.Views
 
             lblResulOrc.Text = valorOrcamento.ToString("0.00") + " €";
             lblResulTotalGasto.Text = totalGasto.ToString("0.00") + " €";
-            lblResDispo.Text = (valorOrcamento - totalGasto).ToString("0.00") + " €";
+
+            decimal disponivel = valorOrcamento - totalGasto;
+            lblResDispo.Text = disponivel.ToString("0.00") + " €";
+
+            //Requisito 18: alerta visual se o orçamento foi ultrapassado
+            if (disponivel < 0)
+            {
+                lblResDispo.ForeColor = System.Drawing.Color.Red;
+                lblResDispo.Font = new System.Drawing.Font(lblResDispo.Font, System.Drawing.FontStyle.Bold);
+
+                //Mostra a mensagem de aviso apenas uma vez por sessão
+                if (!orcamentoAvisado)
+                {
+                    orcamentoAvisado = true;
+                    MessageBox.Show("Orçamento ultrapassado!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                lblResDispo.ForeColor = System.Drawing.Color.FromArgb(0, 64, 0);
+                lblResDispo.Font = new System.Drawing.Font(lblResDispo.Font, System.Drawing.FontStyle.Regular);
+            }
         }
 
+        //Marca um item como adquirido: pede quantidade e preço (requisito 14)
         private void btnAdquirido_Click(object sender, EventArgs e)
         {
             int itemId;
@@ -107,8 +136,10 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Adiciona um item não previsto à compra (requisitos 15 e 16)
         private void btnItemNPrevi_Click(object sender, EventArgs e)
         {
+            //Pede o tipo de artigo
             string tipoTexto = Microsoft.VisualBasic.Interaction.InputBox("Tipo de artigo:", "Item não previsto", "");
             if (string.IsNullOrWhiteSpace(tipoTexto))
             {
@@ -126,6 +157,7 @@ namespace iShoppingKelly.Views
                 return;
             }
 
+            //Pede o nome do artigo
             string artigoTexto = Microsoft.VisualBasic.Interaction.InputBox("Artigo:", "Item não previsto", "");
             if (string.IsNullOrWhiteSpace(artigoTexto))
             {
@@ -143,6 +175,7 @@ namespace iShoppingKelly.Views
                 return;
             }
 
+            //Pede quantidade, preço e observações
             int quantidade;
             decimal preco;
             if (!PedirInteiro("Quantidade:", "Item não previsto", out quantidade))
@@ -171,6 +204,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Fecha a compra: regista data/hora e quem fechou (requisito 19)
         private void btnFecharCompra_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Fechar compra? Depois disso deixa de poder ser alterada.", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -192,6 +226,7 @@ namespace iShoppingKelly.Views
             }
         }
 
+        //Obtém o ID do item selecionado na grelha
         private bool TryGetSelectedId(out int id)
         {
             id = 0;
@@ -200,6 +235,7 @@ namespace iShoppingKelly.Views
                 && int.TryParse(Convert.ToString(dataGridView8.CurrentRow.Cells["Id"].Value), out id);
         }
 
+        //Pede um valor inteiro ao utilizador através de InputBox
         private static bool PedirInteiro(string mensagem, string titulo, out int valor)
         {
             valor = 0;
@@ -207,6 +243,7 @@ namespace iShoppingKelly.Views
             return !string.IsNullOrWhiteSpace(texto) && int.TryParse(texto, out valor) && valor > 0;
         }
 
+        //Pede um valor decimal ao utilizador através de InputBox
         private static bool PedirDecimal(string mensagem, string titulo, out decimal valor)
         {
             valor = 0;

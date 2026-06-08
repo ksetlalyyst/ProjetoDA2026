@@ -10,6 +10,7 @@ namespace iShoppingKelly.Controllers
 {
     public class OrcamentoController
     {
+        //Lista todos os orçamentos ordenados por ano e mês
         public List<Orcamento> ListarTodos()
         {
             using (AppDbContext context = new AppDbContext())
@@ -21,6 +22,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Obtém um orçamento pelo seu ID
         public Orcamento ObterPorId(int id)
         {
             using (AppDbContext context = new AppDbContext())
@@ -30,6 +32,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Obtém o orçamento de um mês e ano específicos
         public Orcamento ObterOrcamentoDoMes(int mes, int ano)
         {
             using (AppDbContext context = new AppDbContext())
@@ -41,10 +44,13 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Calcula o total gasto em compras fechadas num determinado mês/ano
         public decimal ObterTotalGastoNoMes(int mes, int ano)
         {
             using (AppDbContext context = new AppDbContext())
             {
+                //Soma de (QuantidadeAdquirida * PrecoUnitario) dos itens adquiridos
+                //em compras fechadas no mês/ano especificados
                 return context.ItensCompra
                     .Where(i =>
                         i.Adquirido &&
@@ -58,6 +64,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Cria um novo orçamento mensal associado a um utilizador
         public void Criar(
             int mes,
             int ano,
@@ -79,6 +86,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Atualiza um orçamento existente e regista quem alterou
         public void Atualizar(
             int id,
             int mes,
@@ -98,6 +106,7 @@ namespace iShoppingKelly.Controllers
                     orcamento.Ano = ano;
                     orcamento.Valor = valor;
 
+                    //Regista o utilizador que alterou o orçamento
                     orcamento.AlteradoPorId =
                         utilizadorId;
 
@@ -109,6 +118,7 @@ namespace iShoppingKelly.Controllers
             }
         }
 
+        //Elimina um orçamento pelo seu ID
         public void Eliminar(int id)
         {
             using (AppDbContext context = new AppDbContext())
