@@ -3,6 +3,7 @@ using iShoppingKelly.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace iShoppingKelly.Controllers
                     throw new InvalidOperationException("Utilizador não existe.");
                 }
 
-                if (utilizador.PasswordHash != password)
+                //Compara o hash da password fornecida com o hash guardado
+                if (utilizador.PasswordHash != HashPassword(password))
                 {
                     throw new InvalidOperationException("Password incorreta.");
                 }
@@ -48,7 +50,7 @@ namespace iShoppingKelly.Controllers
                 Utilizador utilizador = new Utilizador();
 
                 utilizador.Username = username;
-                utilizador.PasswordHash = password;
+                utilizador.PasswordHash = HashPassword(password);
 
                 context.Utilizadores.Add(utilizador);
 
@@ -111,7 +113,7 @@ namespace iShoppingKelly.Controllers
                     existente.Username = username;
                     if (!string.IsNullOrEmpty(password))
                     {
-                        existente.PasswordHash = password;
+                        existente.PasswordHash = HashPassword(password);
                     }
 
                     context.SaveChanges();
@@ -136,11 +138,26 @@ namespace iShoppingKelly.Controllers
                 {
                     utilizador.Nome = nome;
                     utilizador.Username = username;
-                    utilizador.PasswordHash = password;
+                    utilizador.PasswordHash = HashPassword(password);
 
                     context.Utilizadores.Add(utilizador);
                     context.SaveChanges();
                 }
+            }
+        }
+
+        //Calcula o hash SHA-256 de uma password
+        private static string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+                return sb.ToString();
             }
         }
 
