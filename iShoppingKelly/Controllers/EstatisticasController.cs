@@ -9,19 +9,46 @@ using System.Threading.Tasks;
 
 namespace iShoppingKelly.Controllers
 {
+    //DTO para estatísticas mensais
+    public class EstatisticaMensalDTO
+    {
+        public int Mes { get; set; }
+        public int Ano { get; set; }
+        public decimal Orcamento { get; set; }
+        public decimal TotalGasto { get; set; }
+        public decimal Diferenca { get; set; }
+    }
+
+    //DTO para percentagens de artigos por compra fechada
+    public class PercentagemCompraDTO
+    {
+        public string Nome { get; set; }
+        public DateTime? DataFechada { get; set; }
+        public decimal PercentagemPrevistos { get; set; }
+        public decimal PercentagemNaoPrevistos { get; set; }
+    }
+
+    //DTO para sugestão de lista de compras
+    public class SugestaoArtigoDTO
+    {
+        public string Artigo { get; set; }
+        public int VezesComprado { get; set; }
+        public decimal QuantidadeTotal { get; set; }
+    }
+
     public class EstatisticasController
     {
         //Obtém estatísticas mensais: orçamento, total gasto e diferença por mês/ano
-        public List<object> ObterEstatisticasMensais()
+        public List<EstatisticaMensalDTO> ObterEstatisticasMensais()
         {
             using (AppDbContext context = new AppDbContext())
             {
                 return context.Orcamentos
                     .ToList()
-                    .Select(o => new
+                    .Select(o => new EstatisticaMensalDTO
                     {
-                        o.Mes,
-                        o.Ano,
+                        Mes = o.Mes,
+                        Ano = o.Ano,
                         Orcamento = o.Valor,
 
                         //Calcula o total gasto em compras fechadas nesse mês/ano
@@ -50,23 +77,22 @@ namespace iShoppingKelly.Controllers
                                     (i.QuantidadeAdquirida ?? 0) *
                                     (i.PrecoUnitario ?? 0))
                     })
-                    .Cast<object>()
                     .ToList();
             }
         }
 
         //Obtém percentagens de artigos previstos e não previstos por compra fechada
-        public List<object> ObterPercentagensCompras()
+        public List<PercentagemCompraDTO> ObterPercentagensCompras()
         {
             using (AppDbContext context = new AppDbContext())
             {
                 return context.Compras
                     .Where(c => c.Fechada)
                     .ToList()
-                    .Select(c => new
+                    .Select(c => new PercentagemCompraDTO
                     {
-                        c.Nome,
-                        c.DataFechada,
+                        Nome = c.Nome,
+                        DataFechada = c.DataFechada,
 
                         //Percentagem de artigos previstos na compra
                         PercentagemPrevistos =
@@ -84,7 +110,6 @@ namespace iShoppingKelly.Controllers
                                     (decimal)c.Itens.Count(i => !i.Previsto)
                                     / c.Itens.Count * 100, 2)
                     })
-                    .Cast<object>()
                     .ToList();
             }
         }
@@ -121,7 +146,7 @@ namespace iShoppingKelly.Controllers
 
         //Sugere uma lista de compras com base na semana atual do mês (1ª a 4ª)
         //Considera compras fechadas de meses anteriores na mesma semana
-        public List<object> SugerirListaCompras()
+        public List<SugestaoArtigoDTO> SugerirListaCompras()
         {
             using (AppDbContext context = new AppDbContext())
             {
@@ -146,20 +171,16 @@ namespace iShoppingKelly.Controllers
                 //Agrupa os artigos dessas compras e ordena pelos mais comprados
                 return context.ItensCompra
                     .Where(i => comprasSemanaAnterior.Contains(i.CompraId) && i.Adquirido)
+                    .ToList()
                     .GroupBy(i => i.Artigo.Nome)
-                    .Select(g => new
+                    .Select(g => new SugestaoArtigoDTO
                     {
                         Artigo = g.Key,
-
                         VezesComprado = g.Count(),
-
-                        QuantidadeTotal =
-                            g.Sum(i =>
-                                i.QuantidadeAdquirida ?? 0)
+                        QuantidadeTotal = g.Sum(i => i.QuantidadeAdquirida ?? 0)
                     })
                     .OrderByDescending(x => x.VezesComprado)
                     .Take(10)
-                    .Cast<object>()
                     .ToList();
             }
         }

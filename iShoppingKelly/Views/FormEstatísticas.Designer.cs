@@ -124,7 +124,11 @@
             this.Name = "FormEstatísticas";
             this.Text = "FormEstatísticas";
             this.tabOpcoes.ResumeLayout(false);
+            this.tabEstatisticas.ResumeLayout(false);
+            this.tabSugInteli.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.ResumeLayout(false);
 
         }

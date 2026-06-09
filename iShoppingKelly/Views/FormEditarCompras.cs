@@ -24,6 +24,11 @@ namespace iShoppingKelly.Views
         {
             txtNomeCom.Text = compraAtual.Nome;
             CarregarTipos();
+            //Carrega artigos do primeiro tipo selecionado
+            if (cBoxTipo.SelectedItem is TipoArtigo tipo)
+            {
+                CarregarArtigos(tipo.Id);
+            }
             AtualizarItens();
         }
 
