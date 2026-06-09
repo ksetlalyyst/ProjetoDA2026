@@ -70,7 +70,7 @@ namespace iShoppingKelly.Views
             decimal totalGastoMes = orcamentoController.ObterTotalGastoNoMes(agora.Month, agora.Year);
             decimal totalCompraAtual = itemCompraController.ListarPorCompra(compraAtual.Id)
                 .Where(i => i.Adquirido)
-                .Sum(i => (i.QuantidadeAdquirida ?? 0) * (i.PrecoUnitario ?? 0));
+                .Sum(i => i.QuantidadeAdquirida * i.PrecoUnitario);
             decimal totalGasto = totalGastoMes + totalCompraAtual;
 
             lblResulOrc.Text = valorOrcamento.ToString("0.00") + " €";

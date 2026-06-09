@@ -54,13 +54,13 @@ namespace iShoppingKelly.Controllers
                 return context.ItensCompra
                     .Where(i =>
                         i.Adquirido &&
-                        i.Compra.DataFechada.HasValue &&
-                        i.Compra.DataFechada.Value.Month == mes &&
-                        i.Compra.DataFechada.Value.Year == ano)
+                        i.Compra.Fechada &&
+                        i.Compra.DataFechada.Month == mes &&
+                        i.Compra.DataFechada.Year == ano)
                     .ToList()
                     .Sum(i =>
-                        (i.QuantidadeAdquirida ?? 0) *
-                        (i.PrecoUnitario ?? 0));
+                        i.QuantidadeAdquirida *
+                        i.PrecoUnitario);
             }
         }
 

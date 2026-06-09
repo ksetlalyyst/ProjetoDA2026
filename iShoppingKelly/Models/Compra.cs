@@ -14,17 +14,17 @@ namespace iShoppingKelly.Models
 
         public string Nome { get; set; }
 
-        public DateTime DataCriacao { get; set; } = DateTime.Now;
+        public DateTime DataCriacao { get; set; }
 
-        public DateTime? DataFechada { get; set; }
+        public DateTime DataFechada { get; set; }
 
-        public bool Fechada { get; set; } = false;
+        public bool Fechada { get; set; }
 
         public int CriadaPorId { get; set; }
 
         public Utilizador CriadaPor { get; set; }
 
-        public int? FechadaPorId { get; set; }
+        public int FechadaPorId { get; set; }
 
         public Utilizador FechadaPor { get; set; }
 

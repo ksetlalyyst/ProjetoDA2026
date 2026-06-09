@@ -16,14 +16,10 @@ namespace iShoppingKelly.Models
         public int CriadoPorId { get; set; }
         public Utilizador CriadoPor { get; set; }
 
-        public int? AlteradoPorId { get; set; }
+        public int AlteradoPorId { get; set; }
         public Utilizador AlteradoPor { get; set; }
 
-        public DateTime DataCriacao { get; set; } = DateTime.Now;
-        public DateTime? DataAlteracao { get; set; }
-       /* public override string ToString()
-        {
-            return Nome + " - " + ValorMaximo + "€";
-        }*/
+        public DateTime DataCriacao { get; set; }
+        public DateTime DataAlteracao { get; set; }
     }
 }

@@ -3,11 +3,23 @@ using System.Data.Entity;
 
 namespace iShoppingKelly.Data
 {
+    public class AppDbInitializer : CreateDatabaseIfNotExists<AppDbContext>
+    {
+        protected override void Seed(AppDbContext context)
+        {
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Utilizadores ON");
+            context.Utilizadores.Add(new Utilizador { Id = 0, Nome = "Sistema", Username = "system", PasswordHash = "" });
+            context.SaveChanges();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Utilizadores OFF");
+        }
+    }
+
     //Contexto da base de dados que gere todas as entidades do projeto
     public class AppDbContext : DbContext
     {
         public AppDbContext() : base(GetConnectionString())
         {
+            Database.SetInitializer(new AppDbInitializer());
         }
 
         //String de conexão à base de dados LocalDB
@@ -33,9 +45,9 @@ namespace iShoppingKelly.Data
                 .HasForeignKey(o => o.CriadoPorId)
                 .WillCascadeOnDelete(false);
 
-            //Orçamento -> Utilizador (alterador): opcional, sem cascade delete
+            //Orçamento -> Utilizador (alterador): obrigatório, sem cascade delete
             modelBuilder.Entity<Orcamento>()
-                .HasOptional(o => o.AlteradoPor)
+                .HasRequired(o => o.AlteradoPor)
                 .WithMany(u => u.OrcamentosAlterados)
                 .HasForeignKey(o => o.AlteradoPorId)
                 .WillCascadeOnDelete(false);
@@ -47,9 +59,9 @@ namespace iShoppingKelly.Data
                 .HasForeignKey(c => c.CriadaPorId)
                 .WillCascadeOnDelete(false);
 
-            //Compra -> Utilizador (fechador): opcional, sem cascade delete
+            //Compra -> Utilizador (fechador): obrigatório, sem cascade delete
             modelBuilder.Entity<Compra>()
-                .HasOptional(c => c.FechadaPor)
+                .HasRequired(c => c.FechadaPor)
                 .WithMany(u => u.ComprasFechadas)
                 .HasForeignKey(c => c.FechadaPorId)
                 .WillCascadeOnDelete(false);
@@ -75,9 +87,9 @@ namespace iShoppingKelly.Data
                 .HasForeignKey(i => i.CriadoPorId)
                 .WillCascadeOnDelete(false);
 
-            //ItemCompra -> Utilizador (alterador): opcional, sem cascade delete
+            //ItemCompra -> Utilizador (alterador): obrigatório, sem cascade delete
             modelBuilder.Entity<ItemCompra>()
-                .HasOptional(i => i.AlteradoPor)
+                .HasRequired(i => i.AlteradoPor)
                 .WithMany(u => u.ItensAlterados)
                 .HasForeignKey(i => i.AlteradoPorId)
                 .WillCascadeOnDelete(false);

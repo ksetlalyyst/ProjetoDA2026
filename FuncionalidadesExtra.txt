@@ -1,0 +1,3 @@
+Funcionalidades extra:
+
+-Para maior segurança, foi implementada um "confirmação de palavra-passe" ao registar um utilizador.
