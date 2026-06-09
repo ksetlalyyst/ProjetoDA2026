@@ -1,5 +1,3 @@
-# ProjetoDA2026
-
 
    iShoppingKelly - Aplicacao de Gestao de Compras Domesticas
    Projeto Final - Desenvolvimento de Aplicacoes 2025/2026
