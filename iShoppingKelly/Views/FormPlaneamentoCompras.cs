@@ -121,13 +121,28 @@ namespace iShoppingKelly.Views
             AtualizarCompras();
         }
 
-        //Elimina a compra selecionada (com confirmação)
+        //Elimina a compra selecionada (com confirmação, apenas se não estiver fechada)
         private void btnEliminarNovaCom_Click(object sender, EventArgs e)
         {
             int id;
             if (!TryGetSelectedId(out id))
             {
                 MessageBox.Show("Selecione uma compra para eliminar.");
+                return;
+            }
+
+            CompraController compraController = new CompraController();
+
+            Compra compra = compraController.ObterPorId(id);
+            if (compra == null)
+            {
+                MessageBox.Show("Compra não encontrada.");
+                return;
+            }
+
+            if (compra.Fechada)
+            {
+                MessageBox.Show("Não é possível eliminar uma compra fechada.");
                 return;
             }
 
@@ -138,8 +153,6 @@ namespace iShoppingKelly.Views
 
             try
             {
-                CompraController compraController = new CompraController();
-
                 compraController.Eliminar(id);
                 AtualizarCompras();
             }

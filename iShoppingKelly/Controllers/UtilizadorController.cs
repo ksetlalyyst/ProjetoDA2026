@@ -109,6 +109,13 @@ namespace iShoppingKelly.Controllers
 
                 if (existente != null)
                 {
+                    //Verifica se o novo username já existe (se foi alterado)
+                    if (!string.Equals(existente.Username, username, StringComparison.OrdinalIgnoreCase)
+                        && context.Utilizadores.Any(u => u.Username == username))
+                    {
+                        throw new InvalidOperationException("Username já existe.");
+                    }
+
                     existente.Nome = nome;
                     existente.Username = username;
                     if (!string.IsNullOrEmpty(password))
